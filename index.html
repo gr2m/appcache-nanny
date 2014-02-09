@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>appCache AutoUpdate – Auto Updates for Offline First Applications</title>
+
+  <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
+  <style>
+  html, body { padding: 0; margin: 0; font-family: Helvetica, Arial; }
+  .main { padding: 18px; }
+  h1 { margin: 0; font-size: 28px; font-weight: bold; }
+  h6 { margin: 0; }
+  header { padding: 18px 18px 24px; background: #222; color: #fff; background-image: linear-gradient(90deg, #2C2A86 20.5%, #078D2D 20.5%, #078D2D 37.5%, #FCB20D 37.5%, #FCB20D 55.5%, #EC5100 55.5%, #EC5100 72.5%, #6A3C06 72.5%, #6A3C06 79.5%, #C01C1B 79.5%); /* hoodie hoodie hoodie! */ background-size: 300px 6px; background-repeat: repeat-x; background-position: 0 100%; }
+  header a { color: #fff !important; }
+  pre {margin: 18px -18px; padding: 18px; border-radius: 0; }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>appCache AutoUpdate</h1>
+    <h6>Made by <a href="http://hood.ie">team Hoodie</a> with love. <a href="https://www.gittip.com/hoodiehq/">Leave a tip</a> or <a href="https://github.com/gr2m/appcache-autoupdate">fork this</a>.</h6>
+  </header>
+
+  <div class="main">
+    <h3>Auto-Update for your offline-first app</h3>
+    <p>
+      Making apps work offline is simple, but <a href="http://alistapart.com/article/application-cache-is-a-douchebag">Application Cache is a Douchebag</a>.
+      But users don't care™, and until we have <a href="https://github.com/slightlyoff/ServiceWorker/">Service Workers</a>, we should make the best out of it.
+    </p>
+    <p>
+      <code>AutoUpdate</code> checks automatically for new updates and applies them for you, so they become visible
+      next time you reload the app. It provides a simple JavaScript API, too
+    </p>
+    <pre>AutoUpdate.on('updateready', reloadPage)
+AutoUpdate.on('error', handleError)
+
+// AutoUpdate also offers reliable online/offline events
+// in case the cache manifest could not be downloaded
+AutoUpdate.on('offline', showOfflineIndicator)
+AutoUpdate.on('online', hideOfflineIndicator)
+
+// set interval for checking for updates in ms
+// (default is 30000)
+AutoUpdate.setInterval(60000)
+
+// set alternative interval when offline
+AutoUpdate.setOfflineInterval(30000)
+
+// reload page when routing, if update is ready
+function onRoute(event) {
+  if (AutoUpdate.hasUpdate()) {
+    location.reload(1)
+  }
+}</pre>
+    <p>
+      <code>AutoUpdate</code> is extracted from and battle-tested in <a href="https://minutes.io">minutes.io</a>.
+      Get more instructions and please file issues on <a href="https://github.com/gr2m/appcache-autoupdate">GitHub</a>.
+    </p>
+  </div>
+
+  <script src="bower_components/jquery/jquery.js"></script>
+  <script src="appcache-autoupdate.js"></script>
+  <script>
+
+  </script>
+</body>
+</html>

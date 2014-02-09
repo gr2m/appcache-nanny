@@ -1,0 +1,29 @@
+{
+  "name": "appcache-autoupdate",
+  "version": "0.0.0",
+  "authors": [
+    "Gregor Martynus <gregor@martynus.net>"
+  ],
+  "description": "Auto Updates for Offline First Applications apps",
+  "main": "appcache-autoupdate.js",
+  "keywords": [
+    "appcache",
+    "Auto Updates for Offline First Applications",
+    "offline"
+  ],
+  "license": "MIT",
+  "homepage": "http://gr2m.github.io/appcache-autoupdate",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "deDependencies": {
+    "jquery": "~2.1.0"
+  },
+  "dependencies": {
+    "bootstrap": "~3.1.0"
+  }
+}
