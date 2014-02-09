@@ -32,8 +32,9 @@
       <code>AutoUpdate</code> checks automatically for new updates and applies them for you, so they become visible
       next time you reload the app. It provides a simple JavaScript API, too
     </p>
-    <pre>AutoUpdate.on('updateready', reloadPage)
-AutoUpdate.on('error', handleError)
+    <pre>
+// event API requires jQuery / Zepto to be present
+AutoUpdate.on('updateready', reloadPage)
 
 // AutoUpdate also offers reliable online/offline events
 // in case the cache manifest could not be downloaded
