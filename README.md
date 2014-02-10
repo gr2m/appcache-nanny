@@ -56,8 +56,8 @@ function onRoute(event) {
 Use Case
 --------
 
-I extracted `appCache-autoupdate.js` out of minutes.io, which is an [Auto Updates for Offline First Applications](http://Auto Updates for Offline First Applications.org/)
-web application, anno 2011. It's battle by a ton of users, devices, internet environment.
+I extracted `appCache-autoupdate.js` out of [minutes.io](https://minutes.io), which is an [Offline First](http://offlinefirst.org/)
+web application, anno 2011. It's battle tested by a ton of users, devices, internet environment.
 
 minutes.io checks every 30 seconds if an update is available. And whenever the user navigates
 from one view to another, it reloads the page in case there is. As the assets are all cached,
