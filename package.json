@@ -1,6 +1,6 @@
 {
   "name": "appcache-autoupdate",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Browser library for automated updates of offline first applications",
   "main": "appcache-autoupdate.js",
   "scripts": {
