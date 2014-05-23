@@ -1,0 +1,24 @@
+{
+  "name": "appcache-autoupdate",
+  "version": "0.0.1",
+  "description": "Browser library for automated updates of offline first applications",
+  "main": "appcache-autoupdate.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/gr2m/appcache-autoupdate.git"
+  },
+  "keywords": [
+    "browser",
+    "appcache",
+    "offlinefirst"
+  ],
+  "author": "Gregor Martynus <gregor@martynus.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gr2m/appcache-autoupdate/issues"
+  },
+  "homepage": "https://github.com/gr2m/appcache-autoupdate"
+}

@@ -30,7 +30,7 @@ in ms: `data-autoupdate="10000"`.
 The JS API:
 
 ```js
-// event API requires jQuery / Zepto to be present
+// event API
 AutoUpdate.on('updateready', reloadPage)
 
 // AutoUpdate also offers reliable online/offline events
