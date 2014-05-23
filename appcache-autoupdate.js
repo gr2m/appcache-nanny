@@ -39,13 +39,13 @@
 
   if (typeof define === 'function' && define.amd) {
     define([], function () {
-      root.AutoUpdate = factory(root.applicationCache, Events);
+      root.AutoUpdate = factory(applicationCache, Events);
       return root.AutoUpdate;
     });
   } else if (typeof exports === 'object') {
-    module.exports = factory(root.applicationCache, Events);
+    module.exports = factory(applicationCache, Events);
   } else {
-    root.AutoUpdate = factory(root.applicationCache, Events);
+    root.AutoUpdate = factory(applicationCache, Events);
   }
 })(this, function(applicationCache, Events){ // jshint ignore:line
 
