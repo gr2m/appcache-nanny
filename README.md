@@ -1,7 +1,7 @@
 appCache AutoUpdate
 ===================
 
-> Auto Updates for Offline First Applications apps
+> Auto Updates for Offline First Applications
 
 Installation
 ------------
