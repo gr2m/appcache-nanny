@@ -74,13 +74,15 @@
   // request the appcache.manifest file and check if there's an update
   //
   AutoUpdate.check = function check() {
-    if (! AutoUpdate.isSupported()) return;
+    if (! AutoUpdate.isSupported()) return false;
     try {
       applicationCache.update();
+      return true;
     } catch (e) {
       // there might still be cases when ApplicationCache is not support
       // e.g. in Chrome, when returned HTML is status code 40X
       AutoUpdate.check = noop;
+      return false;
     }
 
   };
@@ -162,7 +164,7 @@
     on('updateready', function() {
       // I have seen both Chorme & Firefox throw exceptions when trying
       // to swap cache on updateready. I was not able to reproduce it,
-      // for for the sake of sanity, I'm making it fail silently
+      // but for the sake of sanity, I'm making it fail silently
       try {
         AutoUpdate.swapCache();
         hasUpdateFlag = true;
