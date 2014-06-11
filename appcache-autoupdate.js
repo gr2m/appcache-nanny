@@ -209,7 +209,7 @@
   //
   //
   //
-  function handleNetworkSucces() {
+  function handleNetworkSucces(event) {
     if (! hasNetworkError) return;
     hasNetworkError = false;
 
@@ -217,6 +217,7 @@
     AutoUpdate.start(checkInterval);
 
     AutoUpdate.trigger('online');
+    AutoUpdate.trigger(event.type);
   }
 
   //
