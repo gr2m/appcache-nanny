@@ -191,7 +191,7 @@
     addEventListener('online', AutoUpdate.check, false);
     addEventListener('offline', AutoUpdate.check, false);
 
-    dataSetting = document.documentElement.getAttribute('data');
+    dataSetting = document.documentElement.getAttribute('data-autoupdate');
 
     if (dataSetting === 'false') return;
     if (!dataSetting) return AutoUpdate.start();
