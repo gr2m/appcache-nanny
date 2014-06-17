@@ -166,7 +166,18 @@
       // to swap cache on updateready. I was not able to reproduce it,
       // but for the sake of sanity, I'm making it fail silently
       try {
-        AutoUpdate.swapCache();
+        applicationCache.swapCache();
+
+        // when page gets opened for the very first time, it already has
+        // the correct assets, but appCache still triggers 'updateready'.
+        // So we swap the cache (so it doesn't do it next time), but don't
+        // re-trigger the 'updateready' event until appCache triggers
+        // 'updateready' again
+        if (isFirstRun) {
+          isFirstRun = false;
+          return;
+        }
+
         hasUpdateFlag = true;
         AutoUpdate.trigger('updateready');
       } catch(error) {}
@@ -210,6 +221,10 @@
   //
   //
   function handleNetworkSucces(event) {
+
+    // re-trigger event via AutoUpdate
+    AutoUpdate.trigger(event.type, event);
+
     if (! hasNetworkError) return;
     hasNetworkError = false;
 
@@ -217,13 +232,16 @@
     AutoUpdate.start(checkInterval);
 
     AutoUpdate.trigger('online');
-    AutoUpdate.trigger(event.type);
   }
 
   //
   //
   //
-  function handleNetworkError () {
+  function handleNetworkError (event) {
+
+    // re-trigger event via AutoUpdate
+    AutoUpdate.trigger('error', event);
+
     if (hasNetworkError) return;
     hasNetworkError = true;
 
@@ -237,6 +255,16 @@
 
     AutoUpdate.trigger('offline');
   }
+
+  //
+  //
+  //
+  var APPCACHE_STORE_KEY = '_appcache_autoupdate';
+  var isFirstRun = false;
+  try {
+    isFirstRun = !! localStorage.getItem(APPCACHE_STORE_KEY);
+    localStorage.setItem(APPCACHE_STORE_KEY, '1');
+  } catch(e) {}
 
   setup();
 
