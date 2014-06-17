@@ -6,28 +6,67 @@ appCache AutoUpdate
 Installation
 ------------
 
-Install using [bower](http://bower.io/) for usage in browser:
+Install using [bower](http://bower.io/)
 
 ```
 bower install --save appcache-autoupdate
 ```
 
+
+Setup
+-----
+
+1. Copy `appcache-loader.html` into the root directory of your app,
+   so that it's accessible at `/appcache-loader.html`.
+2. Create the `manifest.appcache` file and put it in the root directory
+   of your app, next to `/appcache-loader.html`.
+
+Both paths are configurable if needed.
+
+
 Usage
 -----
 
-Make sure the `manifest` attribute is set on the `<html>` tag.
+Load the `appache-autoupdate.js` on all your HTML pages.
 
 ```html
-<html manifest="appcache.manifest">
-<script src="appache-autoupdate.js">
+<script src="appache-autoupdate.js" async></script>
 ```
 
-AutoUpdate starts checking automatically for updates every
-30 seconds. To prevent that, add `data-autoupdate="false"`.
-You can also alter the check interval by setting a time
-in ms: `data-autoupdate="10000"`.
+Adding the `manifest="/manifest.appcache"` property to the `<html>` tag,
+is optional. If it does not exist, the script loads `/appcache-loader.html`
+using an iframe, also known as the [iframe hack](#) (recommended).
 
-The JS API:
+Options
+-------
+
+Options can be set by adding the according `data-...` attributes
+to the `<script src="appache-autoupdate.js">` tag. For example:
+
+```html
+<script src="appache-autoupdate.js" data-manifest="/customname.appcache">
+```
+
+### data-autoupdate _(Default: `30000`)_
+
+AutoUpdate starts checking automatically for updates every 30 seconds.
+To prevent that, add `data-autoupdate="false"` to the
+
+You can also alter the check interval by setting a time in ms:
+`data-autoupdate="10000"`.
+
+### data-manifest _(Default: `/manifest.appcache`)_
+
+Alter the path of the appCache file. The `.appcache` extension is recommended.
+
+### data-loader _(Default: `/appcache-loader.html`)_
+
+Alter the path of the HTML file that gets embeded as iframe to init the
+caching workflow.
+
+
+API
+---
 
 ```js
 // event API
@@ -45,6 +84,7 @@ AutoUpdate.setInterval(60000)
 // set alternative interval when offline
 AutoUpdate.setOfflineInterval(30000)
 
+// usage example:
 // reload page when routing, if update is ready
 function onRoute(event) {
   if (AutoUpdate.hasUpdate()) {
