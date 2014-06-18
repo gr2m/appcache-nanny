@@ -1,3 +1,14 @@
+// AutoUpdate
+// ==========
+//
+// a helper class for autoupdating HTML5 offline cache (appcache)
+//
+// Recommended reads:
+//
+// - http://www.html5rocks.com/en/tutorials/appcache/beginner/
+// - http://alistapart.com/article/application-cache-is-a-douchebag
+//
+
 /* global define */
 'use strict';
 
@@ -49,42 +60,35 @@
   }
 })(this, function(applicationCache, Events){ // jshint ignore:line
 
-  // AutoUpdate
-  // ==========
-  //
-  // a helper class for autoupdating HTML5 offline cache (appcache)
-  // Recommended reads:
-  //
-  // - http://www.html5rocks.com/en/tutorials/appcache/beginner/
-  // - http://alistapart.com/article/application-cache-is-a-douchebag
-  //
   var AutoUpdate = new Events();
 
   //
   //
   //
   AutoUpdate.isSupported = function isSupported() {
-    var hasAppCacheSupport = !! applicationCache;
-    var documentHasManifestAttribute = !! document.documentElement.getAttribute('manifest');
-
-    return hasAppCacheSupport && documentHasManifestAttribute;
+    return !! applicationCache;
   };
 
   //
   // request the appcache.manifest file and check if there's an update
   //
   AutoUpdate.check = function check() {
+    if (! setupDone) {
+      setupCallbacks.push(AutoUpdate.check);
+      setup();
+      return true;
+    }
     if (! AutoUpdate.isSupported()) return false;
     try {
       applicationCache.update();
       return true;
     } catch (e) {
       // there might still be cases when ApplicationCache is not support
-      // e.g. in Chrome, when returned HTML is status code 40X
+      // e.g. in Chrome, when returned HTML is status code 40X, or if
+      // the applicationCache became obsolete
       AutoUpdate.check = noop;
       return false;
     }
-
   };
 
   //
@@ -92,11 +96,18 @@
   // overwrite the current.
   //
   var intervalPointer;
-  AutoUpdate.start = function start (interval) {
+  var setupDone = false;
+  AutoUpdate.start = function start(interval) {
+    if (! setupDone) {
+      setupCallbacks.push(AutoUpdate.start);
+      setup();
+      return true;
+    }
     if (interval) checkInterval = interval;
 
     clearInterval(intervalPointer);
     intervalPointer = setInterval(AutoUpdate.check, checkInterval);
+    trigger('start');
   };
 
   //
@@ -104,6 +115,7 @@
   //
   AutoUpdate.stop = function stop() {
     clearInterval(intervalPointer);
+    trigger('stop');
   };
 
   //
@@ -118,14 +130,14 @@
   // Do not allow less than 1s
   //
   AutoUpdate.setInterval = function setInterval(intervalInMs) {
-    checkInterval = Math.max(parseInt(intervalInMs) || 0, 1000);
+    checkInterval = Math.max(parseInt(intervalInMs, 10) || 0, 1000);
   };
 
   //
   // overwrite default checkInterval when offline
   //
-  AutoUpdate.setInterval = function setOfflineInterval(intervalInMs) {
-    checkOfflineInterval = Math.max(parseInt(intervalInMs) || 0, 1000);
+  AutoUpdate.setOfflineInterval = function setOfflineInterval(intervalInMs) {
+    checkOfflineInterval = Math.max(parseInt(intervalInMs, 10) || 0, 1000);
   };
 
   // Private
@@ -145,51 +157,64 @@
   var hasNetworkError = false;
 
   //
+  var isInitialDownload = false;
+
+  //
   // setup AutoUpdate
   //
-  var doneSetup = false;
   var noop = function(){};
+  var APPCACHE_STORE_KEY = '_appcache_autoupdate';
+  var setupCallbacks = [];
   function setup() {
-    var dataSetting;
+    var iframe;
+    var scriptTag;
 
-    if (doneSetup) return;
-    doneSetup = true;
+    try {
+      isInitialDownload = ! localStorage.getItem(APPCACHE_STORE_KEY);
+      localStorage.setItem(APPCACHE_STORE_KEY, '1');
+    } catch(e) {}
 
     if (! AutoUpdate.isSupported()) {
       AutoUpdate.check = noop;
       return;
     }
 
-    // Fired when the manifest resources have been newly redownloaded.
-    on('updateready', function() {
-      // I have seen both Chorme & Firefox throw exceptions when trying
-      // to swap cache on updateready. I was not able to reproduce it,
-      // but for the sake of sanity, I'm making it fail silently
-      try {
-        applicationCache.swapCache();
+    // load the appcache-loader.html using an iframe
+    iframe = document.createElement('iframe');
+    iframe.src = '/appcache-loader.html';
+    iframe.style.display = 'none';
+    iframe.onload = function() {
+      // we use the iFrame's applicationCache Object now
+      applicationCache = iframe.contentWindow.applicationCache;
 
-        // when page gets opened for the very first time, it already has
-        // the correct assets, but appCache still triggers 'updateready'.
-        // So we swap the cache (so it doesn't do it next time), but don't
-        // re-trigger the 'updateready' event until appCache triggers
-        // 'updateready' again
-        if (isFirstRun) {
-          isFirstRun = false;
-          return;
-        }
+      subscribeToEvents();
+      setupDone = true;
+      setupCallbacks.forEach(function(callback) {
+        callback();
+      });
+    };
+    iframe.onerror = function() {
+      throw new Error('/appcache-loader.html could not be loaded.');
+    };
 
-        hasUpdateFlag = true;
-        AutoUpdate.trigger('updateready');
-      } catch(error) {}
-    });
+    scriptTag = document.getElementsByTagName('script')[0];
+    scriptTag.parentNode.insertBefore(iframe,scriptTag);
+  }
 
-    // Fired after the first cache of the manifest.
-    on('cached', function() {
-      hasUpdateFlag = true;
-    });
+  //
+  //
+  //
+  function subscribeToEvents () {
+    // Fired when the manifest resources have been downloaded.
+    on('updateready', handleUpdateReady);
 
-    // fired when manifest download failed
+    // fired when manifest download request failed
+    // (no connection or 5xx server response)
     on('error',        handleNetworkError);
+
+    // fired when manifest download request succeeded
+    // but server returned 404 / 410
+    on('obsolete',     handleNetworkObsolete);
 
     // fired when manifest download succeeded
     on('noupdate',     handleNetworkSucces);
@@ -201,29 +226,63 @@
     // when browser goes online/offline, trigger check to double check.
     addEventListener('online', AutoUpdate.check, false);
     addEventListener('offline', AutoUpdate.check, false);
-
-    dataSetting = document.documentElement.getAttribute('data-autoupdate');
-
-    if (dataSetting === 'false') return;
-    if (!dataSetting) return AutoUpdate.start();
-
-    AutoUpdate.start(parseInt(dataSetting));
   }
 
   //
   // interface to bind events to cache events
   //
-  function on(event, callback) {
-    applicationCache.addEventListener(event, callback, false);
+  function on(eventName, callback) {
+    applicationCache.addEventListener(eventName, callback, false);
+  }
+
+  //
+  // Trigger event on AutoUpdate. Once an update is ready, we
+  // keep looking for another update, but we stop triggering events.
+  //
+  function trigger(eventName) {
+    if (hasUpdateFlag) return;
+    AutoUpdate.trigger(eventName);
+  }
+
+  //
+  //
+  //
+  function handleUpdateReady () {
+    // I have seen both Chorme & Firefox throw exceptions when trying
+    // to swap cache on updateready. I was not able to reproduce it,
+    // but for the sake of sanity, I'm making it fail silently
+    try {
+
+      if (! hasUpdateFlag) {
+        hasUpdateFlag = true;
+        // don't use trigger here, otherwise the event wouldn't get triggered
+        AutoUpdate.trigger('updateready');
+      }
+      applicationCache.swapCache();
+    } catch(error) {}
   }
 
   //
   //
   //
   function handleNetworkSucces(event) {
+    var prefix = '';
+
+    // when page gets opened for the very first time, it already has
+    // the correct assets, but appCache still triggers 'downloading',
+    // 'progress' and 'cached' events. Once the first 'cached' event
+    // gets triggered, all assets are cached offline. We prefix these
+    // initial events with 'init:'
+    if (isInitialDownload) {
+      prefix = 'init:';
+      if (event.type === 'cached') {
+        isInitialDownload = false;
+      }
+    }
+
 
     // re-trigger event via AutoUpdate
-    AutoUpdate.trigger(event.type, event);
+    trigger(prefix + event.type);
 
     if (! hasNetworkError) return;
     hasNetworkError = false;
@@ -231,16 +290,15 @@
     // reset check interval
     AutoUpdate.start(checkInterval);
 
-    AutoUpdate.trigger('online');
+    trigger('online');
   }
 
   //
   //
   //
-  function handleNetworkError (event) {
-
+  function handleNetworkError () {
     // re-trigger event via AutoUpdate
-    AutoUpdate.trigger('error', event);
+    trigger('error');
 
     if (hasNetworkError) return;
     hasNetworkError = true;
@@ -253,20 +311,36 @@
     // check with offline interval
     AutoUpdate.start(checkOfflineInterval || checkInterval);
 
-    AutoUpdate.trigger('offline');
+    trigger('offline');
   }
 
   //
+  // The 'obsolete' event gets triggered if the requested *.appcache file
+  // has been removed or renamed. The intent behind renaming an *.appcache
+  // file is to clear all locally cached files, it's the only way to do so.
+  // Therefore we don't treet it as an error, it usually means that there
+  // is an update availble that becomes visible after the next page reload.
   //
-  //
-  var APPCACHE_STORE_KEY = '_appcache_autoupdate';
-  var isFirstRun = false;
-  try {
-    isFirstRun = !! localStorage.getItem(APPCACHE_STORE_KEY);
-    localStorage.setItem(APPCACHE_STORE_KEY, '1');
-  } catch(e) {}
+  function handleNetworkObsolete () {
+    // re-trigger event via AutoUpdate
+    trigger('obsolete');
 
-  setup();
+    if (hasNetworkError) {
+      hasNetworkError = false;
+      trigger('online');
+    }
+
+    // Once applicationCache status is obsolete, calling .udate() throws
+    // an error, so we stop checking here
+    AutoUpdate.stop();
+
+    // Tell the user that an update is waiting on next page reload
+    if (! hasUpdateFlag) {
+      hasUpdateFlag = true;
+      // don't use trigger here, otherwise the event wouldn't get triggered
+      AutoUpdate.trigger('updateready');
+    }
+  }
 
   return AutoUpdate;
 });
