@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html data-autoupdate="false">
+<html>
 <head>
   <meta charset="utf-8">
-  <title>appCache AutoUpdate – Auto Updates for Offline First Applications</title>
+  <title>appCache appCacheNanny – Teaches the applicationCache douchebag some manners!</title>
 
   <link rel="stylesheet" type="text/css" href="bower_components/bootstrap/dist/css/bootstrap.css">
   <style>
@@ -18,50 +18,60 @@
 
 <body>
   <header>
-    <h1>appCache AutoUpdate</h1>
-    <h6>Made by <a href="http://hood.ie">team Hoodie</a> with love. <a href="https://www.gittip.com/hoodiehq/">Leave a tip</a> or <a href="https://github.com/gr2m/appcache-autoupdate">fork this</a>.</h6>
+    <h1>appCache appCacheNanny</h1>
+    <h6>Made by <a href="http://hood.ie">team Hoodie</a> with love. <a href="https://www.gittip.com/hoodiehq/">Leave a tip</a> or <a href="https://github.com/gr2m/appcache-nanny">fork this</a>.</h6>
   </header>
 
   <div class="main">
-    <h3>Auto Updating for your Offline First Apps</h3>
+    <h3>Teaches the applicationCache douchebag some manners!</h3>
     <p>
-      Making apps work offline is simple, but <a href="http://alistapart.com/article/application-cache-is-a-douchebag">Application Cache is a Douchebag</a>.
-      But users don't care™, and until we have <a href="https://github.com/slightlyoff/ServiceWorker/">Service Workers</a>, we should make the best out of it.
+      As we all know, the <a href="http://alistapart.com/article/application-cache-is-a-douchebag">Application Cache is a Douchebag</a>.
+      It's time to teach it some manners – The appCache Nanny for Rescue!
     </p>
     <p>
-      <code>AutoUpdate</code> checks automatically for new updates and applies them for you, so they become visible
+      No more manifest attributes on your HTML files. Weathere you want to cache
+      your assets offline or not, when to start ... you are in control™
+    </p>
+    <p>
+      <code>appCacheNanny</code> checks automatically for new updates and applies them for you, so they become visible
       next time you reload the app. It provides a simple JavaScript API, too
     </p>
     <pre>
-// event API
-AutoUpdate.on('updateready', reloadPage)
+// start to check for updates every 30s
+appCacheNanny.start()
 
-// AutoUpdate also offers reliable online/offline events
-// in case the cache manifest could not be downloaded
-AutoUpdate.on('offline', showOfflineIndicator)
-AutoUpdate.on('online', hideOfflineIndicator)
+// optionally, pass intervals in ms
+appCacheNanny.start({checkInterval: 10000})
 
-// set interval for checking for updates in ms
-// (default is 30000)
-AutoUpdate.setInterval(60000)
+// you can also check for updates at any time
+appCacheNanny.check()
 
-// set alternative interval when offline
-AutoUpdate.setOfflineInterval(30000)
+// The appCache nanny tells you if there is a new update available
+appCacheNanny.hasUpdate()
 
-// reload page when routing, if update is ready
-function onRoute(event) {
-  if (AutoUpdate.hasUpdate()) {
-    location.reload(1)
-  }
-}</pre>
+// She tells you about all relevant applicationCache events
+appCacheNanny.on('error', handleError)
+appCacheNanny.on('obsolete', handleObsolete)
+appCacheNanny.on('noupdate', handleNoupdate)
+appCacheNanny.on('downloading', handleDownloading)
+appCacheNanny.on('progress', handleProgress)
+appCacheNanny.on('cached', handleCached)
+appCacheNanny.on('updateready', handleUpdateready)
+
+// plus some extra ones
+appCacheNanny.on('init:downloading', handleInitDownloading);
+appCacheNanny.on('init:progress', handleInitProgress);
+appCacheNanny.on('init:cached', handleInitCached);
+appCacheNanny.on('start', handleStart);
+appCacheNanny.on('stop', handleStop);</pre>
     <p>
-      <code>AutoUpdate</code> is extracted from and battle-tested in <a href="https://minutes.io">minutes.io</a>.
-      Get more instructions and please file issues on <a href="https://github.com/gr2m/appcache-autoupdate">GitHub</a>.
+      <code>appCacheNanny</code> is extracted from and battle-tested in <a href="https://minutes.io">minutes.io</a>.
+      Get more instructions and file issues on <a href="https://github.com/gr2m/appcache-nanny">GitHub</a>.
     </p>
   </div>
 
   <script src="bower_components/jquery/jquery.js"></script>
-  <script src="appcache-autoupdate.js"></script>
+  <script src="appcache-nanny.js"></script>
   <script>
 
   </script>

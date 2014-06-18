@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>appCache Debug page</title>
+  <style>
+    html {
+      background: {color};
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Revision {revision}</h1>
+
+  <div>
+    has update? <span id="hasUpdate">no</span>
+  </div>
+
+  <div>
+    check every <input id="interval" value="30000" onchange="changeInterval()">ms
+  </div>
+
+  <div>
+    <button onclick="start()" id="start">Start auto updating</button>
+    <button onclick="stop()" id="stop" style="display:none;">Stop auto updating</button>
+    <button onclick="appCacheNanny.check()">Check for update</button>
+    <button onclick="bumpRevision()">Bump revision</button>
+    <button onclick="removeManifest()">Remove manifest</button>
+    <button onclick="clearLogs()">Clear logs</button>
+  </div>
+
+  <div id="logs"></div>
+  <script src="/appcache-nanny.js"></script>
+  <script>
+    appCacheNanny.on('error', handleEvent('error'));
+    appCacheNanny.on('obsolete', handleEvent('obsolete'));
+    appCacheNanny.on('noupdate', handleEvent('noupdate'));
+    appCacheNanny.on('downloading', handleEvent('downloading'));
+    appCacheNanny.on('progress', handleEvent('progress'));
+    appCacheNanny.on('cached', handleEvent('cached'));
+    appCacheNanny.on('updateready', handleEvent('updateready'));
+
+    appCacheNanny.on('init:downloading', handleEvent('init:downloading'));
+    appCacheNanny.on('init:progress', handleEvent('init:progress'));
+    appCacheNanny.on('init:cached', handleEvent('init:cached'));
+
+    appCacheNanny.on('start', handleEvent('start'));
+    appCacheNanny.on('stop', handleEvent('stop'));
+
+    function handleEvent (eventName) {
+      return function() {
+        var message = eventName + ' triggered';
+        var p;
+        console.log(message);
+
+        p = document.createElement('p');
+        p.textContent = message;
+        document.querySelector('#logs').appendChild(p);
+
+        if (appCacheNanny.hasUpdate()) {
+          document.querySelector('#hasUpdate').textContent = 'yes!'
+          p = document.createElement('p');
+          p.textContent = 'New Update is ready!';
+          document.querySelector('#logs').appendChild(p);
+        }
+      }
+    }
+
+    var startButton = document.querySelector('#start');
+    var stopButton = document.querySelector('#stop');
+    function start () {
+      startButton.style.display = 'none';
+      stopButton.style.display = 'inline';
+      appCacheNanny.start();
+    }
+    function stop () {
+      startButton.style.display = 'inline';
+      stopButton.style.display = 'none';
+      appCacheNanny.stop();
+    }
+
+    function bumpRevision () {
+      var request = new XMLHttpRequest();
+      request.open('GET', '/bump-revision', true);
+
+      request.onload = function() {
+        if (request.status !== 200){
+          alert('Could not bump revision – server error')
+        }
+      };
+
+      request.onerror = function() {
+        alert('Could not bump revision – server error')
+      };
+
+      request.send();
+    }
+
+    function removeManifest () {
+      var request = new XMLHttpRequest();
+      request.open('GET', '/remove-manifest', true);
+
+      request.onload = function() {
+        if (request.status !== 200){
+          alert('Could not remove manifest – server error')
+        }
+      };
+
+      request.onerror = function() {
+        alert('Could not remove manifest – server error')
+      };
+
+      request.send();
+    }
+
+    function changeInterval () {
+      var interval = parseInt(document.querySelector('#interval').value, 10);
+      appCacheNanny.setInterval(interval);
+      appCacheNanny.stop();
+      appCacheNanny.start();
+    }
+
+    function clearLogs() {
+      document.querySelector('#logs').innerHTML = '';
+    }
+  </script>
+</body>
+</html>

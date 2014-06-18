@@ -1,14 +1,14 @@
 {
-  "name": "appcache-autoupdate",
-  "version": "0.0.3",
-  "description": "Browser library for automated updates of offline first applications",
-  "main": "appcache-autoupdate.js",
+  "name": "appcache-nanny",
+  "version": "0.0.1",
+  "description": "Teaches the applicationCache douchebag some manners!",
+  "main": "appcache-nanny.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/gr2m/appcache-autoupdate.git"
+    "url": "git://github.com/gr2m/appcache-nanny.git"
   },
   "keywords": [
     "browser",
@@ -18,7 +18,7 @@
   "author": "Gregor Martynus <gregor@martynus.net>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gr2m/appcache-autoupdate/issues"
+    "url": "https://github.com/gr2m/appcache-nanny/issues"
   },
-  "homepage": "https://github.com/gr2m/appcache-autoupdate"
+  "homepage": "https://github.com/gr2m/appcache-nanny"
 }

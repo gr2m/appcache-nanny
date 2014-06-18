@@ -1,18 +1,18 @@
 {
-  "name": "appcache-autoupdate",
-  "version": "0.0.3",
+  "name": "appcache-nanny",
+  "version": "0.0.1",
   "authors": [
     "Gregor Martynus <gregor@martynus.net>"
   ],
-  "description": "Auto Updates for Offline First Applications apps",
-  "main": "appcache-autoupdate.js",
+  "description": "Teaches the applicationCache douchebag some manners!",
+  "main": "appcache-nanny.js",
   "keywords": [
     "appcache",
     "Auto Updates for Offline First Applications",
     "offline"
   ],
   "license": "MIT",
-  "homepage": "http://gr2m.github.io/appcache-autoupdate",
+  "homepage": "http://gr2m.github.io/appcache-nanny",
   "ignore": [
     "**/.*",
     "node_modules",
