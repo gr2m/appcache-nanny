@@ -103,6 +103,8 @@
 
     clearInterval(intervalPointer);
     intervalPointer = setInterval(appCacheNanny.check, checkInterval);
+    appCacheNanny.check();
+    isCheckingForUpdatesFlag = true;
     trigger('start');
   };
 
@@ -111,7 +113,15 @@
   //
   appCacheNanny.stop = function stop() {
     clearInterval(intervalPointer);
+    isCheckingForUpdatesFlag = false;
     trigger('stop');
+  };
+
+  //
+  // returns true if the nanny is checking periodically for updates
+  //
+  appCacheNanny.isCheckingForUpdates = function isCheckingForUpdates() {
+    return isCheckingForUpdatesFlag;
   };
 
   //
@@ -132,6 +142,9 @@
 
   // flag if there is a pending update, being applied after next page reload
   var hasUpdateFlag = false;
+
+  // flag whether the nanny is checking for updates in the background
+  var isCheckingForUpdatesFlag = false;
 
   // flag if there was an error updating the appCache, usually meaning
   // it couldn't connect, a.k.a. you're offline.
