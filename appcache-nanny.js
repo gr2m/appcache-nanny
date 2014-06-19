@@ -71,7 +71,10 @@
   appCacheNanny.check = function check() {
     if (! setupDone) {
       setupCallbacks.push(appCacheNanny.check);
-      setup();
+      if (! setupPending) {
+        setup();
+        setupPending = true;
+      }
       return true;
     }
     if (! appCacheNanny.isSupported()) return false;
@@ -93,17 +96,20 @@
   //
   var intervalPointer;
   var setupDone = false;
+  var setupPending = false;
   appCacheNanny.start = function start(options) {
     if (! setupDone) {
       setupCallbacks.push(appCacheNanny.start);
-      setup();
+      if (! setupPending) {
+        setup();
+        setupPending = true;
+      }
       return true;
     }
     if (options && options.checkInterval) checkInterval = options.checkInterval;
 
     clearInterval(intervalPointer);
     intervalPointer = setInterval(appCacheNanny.check, checkInterval);
-    appCacheNanny.check();
     isCheckingForUpdatesFlag = true;
     trigger('start');
   };
@@ -182,6 +188,7 @@
       applicationCache = iframe.contentWindow.applicationCache;
 
       subscribeToEvents();
+      setupPending = false;
       setupDone = true;
       setupCallbacks.forEach(function(callback) {
         callback();
