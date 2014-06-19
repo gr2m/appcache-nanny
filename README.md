@@ -146,6 +146,14 @@ on applicationCache. I'd like to highlight
 * **[Eric Bidelman](https://twitter.com/ebidel)**: [A Beginner's Guide to Using the Application Cache](http://www.html5rocks.com/en/tutorials/appcache/beginner/)
 * [Appcache Facts](http://appcachefacts.info/) by [Mark Christian](https://twitter.com/shinypb) & [Peter Lubbers](https://twitter.com/peterlubbers)
 
+
+TODOs / IDEAs
+-------------
+
+* on obsolete, remove the iframe, load it again to check if a new *.appcache path
+  has been set. If yes, update and trigger `updateready` event, otherwise trigger
+  `obsolete` event
+
 Fine Print
 ----------
 
