@@ -1,6 +1,6 @@
 {
   "name": "appcache-nanny",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Teaches the applicationCache douchebag some manners!",
   "main": "appcache-nanny.js",
   "scripts": {
