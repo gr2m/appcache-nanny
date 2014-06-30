@@ -6,8 +6,8 @@ The appCache Nanny
 As we all know, the [Application Cache is a Douchbag](http://alistapart.com/article/application-cache-is-a-douchebag).
 It's time to teach it some manners – The appCache Nanny for Rescue!
 
-No more manifest attributes on your HTML files. Weathere you want to cache
-your assets offline or not, when to start ... you are in control™
+No more manifest attributes on your HTML files. Whether you want to cache
+your assets offline or not, when to start ... You Are In Control™
 
 Have a glance:
 
