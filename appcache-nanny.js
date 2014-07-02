@@ -58,6 +58,11 @@
 
   var appCacheNanny = new Events();
 
+  var DEFAULT_MANIFEST_LOADER_PATH = '/appcache-loader.html';
+  var nannyOptions = {
+    loaderPath: DEFAULT_MANIFEST_LOADER_PATH
+  };
+
   //
   //
   //
@@ -137,6 +142,34 @@
     return hasUpdateFlag;
   };
 
+  //
+  //
+  //
+  appCacheNanny.set = function setOption(key,  value) {
+    var property, newSettings;
+    if (typeof key === 'object') {
+      newSettings = key;
+      for (property in newSettings) if (newSettings.hasOwnProperty(property)) {
+        nannyOptions[property] = newSettings[property];
+      }
+      return;
+    }
+    nannyOptions[key] = value;
+  };
+
+  //
+  //
+  //
+  appCacheNanny.get = function getOption(key) {
+    var property, settings = {};
+    if (key) return nannyOptions[key];
+
+    for (property in nannyOptions) if (nannyOptions.hasOwnProperty(property)) {
+      settings[property] = nannyOptions[property];
+    }
+    return settings;
+  };
+
   // Private
   // -------
 
@@ -181,7 +214,7 @@
 
     // load the appcache-loader.html using an iframe
     iframe = document.createElement('iframe');
-    iframe.src = '/appcache-loader.html';
+    iframe.src = nannyOptions.loaderPath;
     iframe.style.display = 'none';
     iframe.onload = function() {
       // we use the iFrame's applicationCache Object now

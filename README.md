@@ -34,11 +34,17 @@ appCacheNanny.on('cached', handleCached)
 appCacheNanny.on('updateready', handleUpdateready)
 
 // plus some extra ones
-appCacheNanny.on('init:downloading', handleInitDownloading);
-appCacheNanny.on('init:progress', handleInitProgress);
-appCacheNanny.on('init:cached', handleInitCached);
-appCacheNanny.on('start', handleStart);
-appCacheNanny.on('stop', handleStop);
+appCacheNanny.on('init:downloading', handleInitDownloading)
+appCacheNanny.on('init:progress', handleInitProgress)
+appCacheNanny.on('init:cached', handleInitCached)
+appCacheNanny.on('start', handleStart)
+appCacheNanny.on('stop', handleStop)
+
+// options
+appCacheNanny.set('loaderPath', '/path/to/my-custom-loader.html')
+appCacheNanny.set({ 'loaderPath': '/path/to/my-custom-loader.html' })
+appCacheNanny.get('loaderPath')
+appCacheNanny.get() // returns all options
 ```
 
 Setup
