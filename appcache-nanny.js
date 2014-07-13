@@ -73,9 +73,10 @@
   //
   // request the appcache.manifest file and check if there's an update
   //
-  appCacheNanny.check = function check() {
+  appCacheNanny.update = function update() {
+    trigger('update');
     if (! setupDone) {
-      setupCallbacks.push(appCacheNanny.check);
+      setupCallbacks.push(appCacheNanny.update);
       if (! setupPending) {
         setup();
         setupPending = true;
@@ -90,7 +91,7 @@
       // there might still be cases when ApplicationCache is not support
       // e.g. in Chrome, when returned HTML is status code 40X, or if
       // the applicationCache became obsolete
-      appCacheNanny.check = noop;
+      appCacheNanny.update = noop;
       return false;
     }
   };
@@ -114,7 +115,7 @@
     if (options && options.checkInterval) checkInterval = options.checkInterval;
 
     clearInterval(intervalPointer);
-    intervalPointer = setInterval(appCacheNanny.check, checkInterval);
+    intervalPointer = setInterval(appCacheNanny.update, checkInterval);
     isCheckingForUpdatesFlag = true;
     trigger('start');
   };
@@ -208,7 +209,7 @@
     } catch(e) {}
 
     if (! appCacheNanny.isSupported()) {
-      appCacheNanny.check = noop;
+      appCacheNanny.update = noop;
       return;
     }
 
@@ -257,9 +258,9 @@
     on('progress',     handleNetworkSucces);
     on('downloading',  handleNetworkSucces);
 
-    // when browser goes online/offline, trigger check to double check.
-    addEventListener('online', appCacheNanny.check, false);
-    addEventListener('offline', appCacheNanny.check, false);
+    // when browser goes online/offline, look for updates to make sure.
+    addEventListener('online', appCacheNanny.update, false);
+    addEventListener('offline', appCacheNanny.update, false);
   }
 
   //

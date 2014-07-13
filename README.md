@@ -19,12 +19,13 @@ appCacheNanny.start()
 appCacheNanny.start({checkInterval: 10000})
 
 // you can also check for updates at any time
-appCacheNanny.check()
+appCacheNanny.update()
 
 // The appCache nanny tells you if there is a new update available
 appCacheNanny.hasUpdate()
 
 // She tells you about all relevant applicationCache events
+appCacheNanny.on('update', handleUpdate)
 appCacheNanny.on('error', handleError)
 appCacheNanny.on('obsolete', handleObsolete)
 appCacheNanny.on('noupdate', handleNoupdate)
