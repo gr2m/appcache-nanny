@@ -56,11 +56,14 @@
   }
 })(this, function(applicationCache, Events){ // jshint ignore:line
 
-  var appCacheNanny = new Events();
-
   var DEFAULT_MANIFEST_LOADER_PATH = '/appcache-loader.html';
+  var DEFAULT_CHECK_INTERVAL = 30000;
+
+  var appCacheNanny = new Events();
   var nannyOptions = {
-    loaderPath: DEFAULT_MANIFEST_LOADER_PATH
+    loaderPath: DEFAULT_MANIFEST_LOADER_PATH,
+    checkInterval: DEFAULT_CHECK_INTERVAL,
+    offlineCheckInterval: DEFAULT_CHECK_INTERVAL
   };
 
   //
@@ -104,6 +107,8 @@
   var setupDone = false;
   var setupPending = false;
   appCacheNanny.start = function start(options) {
+    if (options) appCacheNanny.set(options);
+
     if (! setupDone) {
       setupCallbacks.push(appCacheNanny.start);
       if (! setupPending) {
@@ -112,7 +117,6 @@
       }
       return true;
     }
-    if (options && options.checkInterval) checkInterval = options.checkInterval;
 
     clearInterval(intervalPointer);
     intervalPointer = setInterval(appCacheNanny.update, checkInterval);
@@ -174,11 +178,10 @@
   // Private
   // -------
 
-  // default check interval in ms
-  var checkInterval = 30000;
 
-  // optional: shorter interval when offline
-  var checkOfflineInterval;
+  // this is the internal state of checkInterval.
+  // It usually differs between online / offline state
+  var checkInterval = DEFAULT_CHECK_INTERVAL;
 
   // flag if there is a pending update, being applied after next page reload
   var hasUpdateFlag = false;
@@ -323,7 +326,8 @@
     hasNetworkError = false;
 
     // reset check interval
-    appCacheNanny.start(checkInterval);
+    checkInterval = appCacheNanny.get('checkInterval');
+    appCacheNanny.start();
 
     trigger('online');
   }
@@ -344,7 +348,8 @@
     if (applicationCache.status === applicationCache.UNCACHED) return;
 
     // check with offline interval
-    appCacheNanny.start(checkOfflineInterval || checkInterval);
+    checkInterval = appCacheNanny.get('offlineCheckInterval');
+    appCacheNanny.start();
 
     trigger('offline');
   }
