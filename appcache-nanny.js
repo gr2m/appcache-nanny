@@ -9,6 +9,7 @@
 'use strict';
 
 (function (root, factory) {
+  var appCache = (typeof applicationCache === 'undefined') ? undefined : applicationCache;
 
   // based on https://github.com/allouis/minivents/blob/master/minivents.js
   function Events(){
@@ -46,13 +47,13 @@
 
   if (typeof define === 'function' && define.amd) {
     define([], function () {
-      root.appCacheNanny = factory(applicationCache, Events);
+      root.appCacheNanny = factory(appCache, Events);
       return root.appCacheNanny;
     });
   } else if (typeof exports === 'object') {
-    module.exports = factory(applicationCache, Events);
+    module.exports = factory(appCache, Events);
   } else {
-    root.appCacheNanny = factory(applicationCache, Events);
+    root.appCacheNanny = factory(appCache, Events);
   }
 })(this, function(applicationCache, Events){ // jshint ignore:line
 
