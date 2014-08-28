@@ -101,6 +101,18 @@
   };
 
   //
+  // update the 'update check' interval
+  //
+  appCacheNanny.setUpdateInterval = function setUpdateInterval(time) {
+    if (!time || (parseInt(time) !== time)) {
+        throw new Error('Invalid interval duration provided');
+    }
+    checkInterval = time;
+    clearInterval(intervalPointer);
+    intervalPointer = setInterval(appCacheNanny.update, checkInterval);
+  };
+
+  //
   // start auto updating. Optionally pass interval in ms to
   // overwrite the current.
   //
@@ -118,9 +130,7 @@
       }
       return true;
     }
-
-    clearInterval(intervalPointer);
-    intervalPointer = setInterval(appCacheNanny.update, checkInterval);
+    appCacheNanny.setUpdateInterval(checkInterval);
     isCheckingForUpdatesFlag = true;
     trigger('start');
   };
