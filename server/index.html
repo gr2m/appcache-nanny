@@ -114,8 +114,8 @@
     }
 
     function changeInterval () {
-      var interval = parseInt(document.querySelector('#interval').value, 10);
-      appCacheNanny.setInterval(interval);
+      var intervalDuration = parseInt(document.querySelector('#interval').value, 10);
+      appCacheNanny.setUpdateInterval(intervalDuration);
       appCacheNanny.stop();
       appCacheNanny.start();
     }
