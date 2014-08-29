@@ -104,7 +104,7 @@
   // update the 'update check' interval
   //
   appCacheNanny.setUpdateInterval = function setUpdateInterval(time) {
-    if (!time || (parseInt(time) !== time)) {
+    if (!time || (parseInt(time, 10) !== time)) {
         throw new Error('Invalid interval duration provided');
     }
     checkInterval = time;
