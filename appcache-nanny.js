@@ -230,7 +230,6 @@
     // load the appcache-loader.html using an iframe
     iframe = document.createElement('iframe');
     iframe.src = nannyOptions.loaderPath;
-    iframe.id = 'appCacheNannyLoader';
     iframe.style.display = 'none';
     iframe.onload = function() {
       // we use the iFrame's applicationCache Object now
