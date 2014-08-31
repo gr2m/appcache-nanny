@@ -115,7 +115,7 @@
 
     function changeInterval () {
       var interval = parseInt(document.querySelector('#interval').value, 10);
-      appCacheNanny.setInterval(interval);
+      appCacheNanny.set('checkInterval', interval);
       appCacheNanny.stop();
       appCacheNanny.start();
     }
