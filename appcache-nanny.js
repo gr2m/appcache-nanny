@@ -120,6 +120,10 @@
     }
 
     clearInterval(intervalPointer);
+
+    // check with offline interval
+    checkInterval = hasNetworkError ? appCacheNanny.get('offlineCheckInterval') : appCacheNanny.get('checkInterval');
+
     intervalPointer = setInterval(appCacheNanny.update, checkInterval);
     isCheckingForUpdatesFlag = true;
     trigger('start');
@@ -326,10 +330,7 @@
     if (! hasNetworkError) return;
     hasNetworkError = false;
 
-    // reset check interval
-    checkInterval = appCacheNanny.get('checkInterval');
     appCacheNanny.start();
-
     trigger('online');
   }
 
@@ -348,8 +349,6 @@
     // when applicationCache.status != uncached
     if (applicationCache.status === applicationCache.UNCACHED) return;
 
-    // check with offline interval
-    checkInterval = appCacheNanny.get('offlineCheckInterval');
     appCacheNanny.start();
 
     trigger('offline');
