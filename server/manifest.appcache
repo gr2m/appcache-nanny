@@ -2,7 +2,6 @@ CACHE MANIFEST
 
 CACHE:
 /
-/appcache-loader.html
 /appcache-nanny.js
 
 FALLBACK:
