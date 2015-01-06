@@ -2,6 +2,7 @@
 var http = require('http'),
     url = require('url'),
     fs = require('fs'),
+    moment = require('moment'),
     port = process.argv[2] || 8888;
 
 http.createServer(function(request, response) {
@@ -22,9 +23,10 @@ http.createServer(function(request, response) {
 }).listen(parseInt(port, 10));
 
 var revision = 1;
-var timestamp = Date.now();
+var timestamp = moment().format('H:mm:ss');
 function bumpRevision(response) {
   revision++;
+  timestamp = moment().format('H:mm:ss');
   response.writeHead(200);
   response.end();
 }
@@ -44,20 +46,15 @@ function empty(response) {
 
 function page(response) {
   var html = fs.readFileSync('./index.html').toString();
-  var color = 'rgb('+randomColor()+','+randomColor()+','+randomColor()+')';
-  html = html.replace('{color}', color);
-  html = html.replace('{revision}', timestamp + '-' + revision);
+  html = html.replace('{timestamp}', timestamp);
+  html = html.replace('{revision}', revision);
 
   // simulate a slow connection
   setTimeout(function() {
     response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
     response.write(html + '\n');
     response.end();
-  }, 1000);
-}
-
-function randomColor() {
-  return parseInt(Math.random()*150 + 100, 10);
+  }, 0);
 }
 
 function loader(response) {
@@ -78,7 +75,7 @@ function manifest(response) {
   }
 
   text = fs.readFileSync('./manifest.appcache').toString();
-  text += '\n# rev ' + timestamp + '-' + revision;
+  text += '\n# last change: ' + timestamp;
 
   response.writeHead(200, {'Content-Type': 'text/cache-manifest'});
   response.write(text + '\n');

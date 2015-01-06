@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/gr2m/appcache-nanny/issues"
   },
-  "homepage": "https://github.com/gr2m/appcache-nanny"
+  "homepage": "https://github.com/gr2m/appcache-nanny",
+  "devDependencies": {
+    "moment": "^2.8.4"
+  }
 }
