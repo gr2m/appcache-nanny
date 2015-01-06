@@ -373,13 +373,6 @@
     // Once applicationCache status is obsolete, calling .udate() throws
     // an error, so we stop checking here
     appCacheNanny.stop();
-
-    // Tell the user that an update is waiting on next page reload
-    if (! hasUpdateFlag) {
-      hasUpdateFlag = true;
-      // don't use trigger here, otherwise the event wouldn't get triggered
-      appCacheNanny.trigger('updateready');
-    }
   }
 
   return appCacheNanny;
