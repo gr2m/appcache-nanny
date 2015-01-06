@@ -47,8 +47,8 @@
   "undef": true,
 
   // Warn when variables are defined but never used.
-  "unused": true,
+  "unused": false,
 
   // Enforce placing 'use strict' at the top function scope
-  "strict": true
+  "strict": false
 }
