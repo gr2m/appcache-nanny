@@ -1,77 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>appCache Debug page</title>
-  <style>
-    html {
-      font-family: Helvetica, Arial;
-      background: {color};
-    }
-    body {
-      margin: 0;
-    }
-    header {
-      padding: 1em;
-      background: #eee;
-      border-bottom: 1px solid #ddd;
-    }
-    h1 small {
-      display: block;
-      font-weight: normal;
-      font-size: 0.5em;
-    }
-    table {
-      width: 100%;
-    }
-    th {
-      text-align: left;
-      white-space: nowrap;
-      width: 1px;
-      padding-right: .5em;
-    }
-    td, th {
-      border-top: 1px solid #000;
-      vertical-align: top;
-      padding-top: .5em;
-      padding-bottom: .5em;
-    }
-    button {
-      border: 0;
-      padding: 1em;
-      margin: 0 0 1em;
-      background: #333;
-      color: #fff;
-      border-radius: 4px;
-    }
-    #logs p {
-      padding: 1em;
-      margin: 0;
-      border-radius: 1px solid #ddd;
-    }
-    #logs strong {
-      font-size: .8em;
-      font-weight: normal;
-      border-radius: 4px;
-      padding: .2em .4em;
-      color: #fff;
-    }
-    #logs .appCacheNanny strong {
-      background: #36F;
-    }
-    #logs .error strong {
-      background: #C00;
-    }
-    #logs .server strong {
-      background: #00B32D;
-    }
-  </style>
+  <meta charset="utf-8">
+  <title>appCache Demo page</title>
+  <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
 <body>
 
   <header>
     <h1>
-      Version {revision}<br>
-      <small>last change: {timestamp}</small>
+      Version <span id="version"></span><br>
+      <small>last change: <span id="last-change"></span></small>
     </h1>
 
     <table>
@@ -112,102 +51,8 @@
   </header>
 
   <div id="logs"></div>
+  <script src="/version.js"></script>
   <script src="/appcache-nanny.js"></script>
-  <script>
-    /* global appCacheNanny */
-    appCacheNanny.on('error', handleEvent('error'));
-    appCacheNanny.on('obsolete', handleEvent('obsolete'));
-    appCacheNanny.on('noupdate', handleEvent('noupdate'));
-    appCacheNanny.on('downloading', handleEvent('downloading'));
-    appCacheNanny.on('progress', handleEvent('progress'));
-    appCacheNanny.on('cached', handleEvent('cached'));
-    appCacheNanny.on('updateready', handleEvent('updateready'));
-
-    appCacheNanny.on('init:downloading', handleEvent('init:downloading'));
-    appCacheNanny.on('init:progress', handleEvent('init:progress'));
-    appCacheNanny.on('init:cached', handleEvent('init:cached'));
-
-    appCacheNanny.on('start', handleEvent('start'));
-    appCacheNanny.on('stop', handleEvent('stop'));
-    appCacheNanny.on('online', handleEvent('online'));
-    appCacheNanny.on('offline', handleEvent('offline'));
-
-    function handleEvent (eventName) {
-      return function() {
-        if (eventName === 'error') {
-          log('error', 'appCacheNanny error');
-          console.log(arguments);
-        } else {
-          log('appCacheNanny', eventName);
-        }
-
-        if (appCacheNanny.hasUpdate()) {
-          document.querySelector('#hasUpdate').textContent = 'yes!';
-        }
-      };
-    }
-
-    function log (type, text) {
-      var item = document.createElement('p');
-
-      item.innerHTML = '<strong>'+type+'</strong> ' + text;
-      item.className = type;
-      document.querySelector('#logs').appendChild(item);
-    }
-
-    var startButton = document.querySelector('#start');
-    var stopButton = document.querySelector('#stop');
-    function start () {
-      startButton.style.display = 'none';
-      stopButton.style.display = 'inline';
-      appCacheNanny.start();
-      document.querySelector('#isChecking').textContent = 'yes!';
-    }
-    function stop () {
-      startButton.style.display = 'inline';
-      stopButton.style.display = 'none';
-      appCacheNanny.stop();
-      document.querySelector('#isChecking').textContent = 'no';
-    }
-
-    function bumpRevision () {
-      var request = new XMLHttpRequest();
-      request.open('GET', '/bump-revision', true);
-
-      request.onload = function() {
-        if (request.status !== 200){
-          return log('error', 'Could not bump revision – server error');        }
-        log('server', 'New version created.');
-      };
-
-      request.onerror = function() {
-        log('error', 'Could not bump revision – server error');
-      };
-
-      request.send();
-    }
-
-    function removeManifest () {
-      var request = new XMLHttpRequest();
-      request.open('GET', '/remove-manifest', true);
-
-      request.onload = function() {
-        if (request.status !== 200){
-          return log('error', 'Could not remove manifest – server error');
-        }
-        log('server', 'Cache manifes removed.');
-      };
-
-      request.onerror = function() {
-        log('error', 'Could not remove manifest – server error');
-      };
-
-      request.send();
-    }
-
-    function clearLogs() {
-      document.querySelector('#logs').innerHTML = '';
-    }
-  </script>
+  <script src="/script.js"></script>
 </body>
 </html>

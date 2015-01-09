@@ -1,95 +1,126 @@
 #!/usr/bin/env node
 
 'use strict';
-var http = require('http'),
-    url = require('url'),
-    fs = require('fs'),
-    moment = require('moment'),
-    port = process.argv[2] || 8888;
 
-http.createServer(function(request, response) {
+var Hapi = require('hapi');
 
-  var uri = url.parse(request.url).pathname;
+var http = require('http');
+var util = require('util');
+var url = require('url');
+var fs = require('fs');
+var moment = require('moment');
+var port = process.argv[2] || 8888;
 
-  console.log(uri);
+var server = new Hapi.Server();
 
-  if (uri === '/manifest.appcache') return manifest(response);
-  if (uri === '/appcache-nanny.js') return script(response);
-  if (uri === '/appcache-loader.html') return loader(response);
-  if (uri === '/bump-revision') return bumpRevision(response);
-  if (uri === '/remove-manifest') return removeManifest(response);
-  if (uri === '/favicon.ico') return empty(response);
-
-  // for any other URL, return index.html
-  return page(response);
-}).listen(parseInt(port, 10));
-
-var revision = 1;
+var version = 1;
 var timestamp = moment().format('H:mm:ss');
-function bumpRevision(response) {
-  revision++;
-  timestamp = moment().format('H:mm:ss');
-  response.writeHead(200);
-  response.end();
-}
+var manifestRemoved;
 
-var manifestRemoved = false;
-function removeManifest(response) {
-  manifestRemoved = true;
-  response.writeHead(200);
-  response.end();
-}
+server.connection({
+  host: 'localhost',
+  port: 8888
+});
 
-function empty(response) {
-  response.writeHead(200);
-  response.end();
-}
+// Serve dynamic js file to set version / timestamp
+server.route({
+  method: 'GET',
+  path: '/version.js',
+  handler: function(request, reply) {
+    var setVersion = util.format('document.querySelector("#version").textContent = "%s";', version);
+    var setLastChange = util.format('document.querySelector("#last-change").textContent = "%s";', timestamp);
+
+    var response = reply([setVersion,setLastChange].join('\n'));
+    response.type('application/javascript');
+  }
+});
+
+// serve appcache-nanny.js
+server.route({
+  method: 'GET',
+  path: '/appcache-nanny.js',
+  handler: function(request, reply) {
+    reply.file('./appcache-nanny.js');
+  }
+});
+// serve appcache-loader.html
+server.route({
+  method: 'GET',
+  path: '/appcache-loader.html',
+  handler: function(request, reply) {
+    reply.file('./appcache-loader.html');
+  }
+});
+
+// serve manifest.appcache
+server.route({
+  method: 'GET',
+  path: '/manifest.appcache',
+  handler: manifest
+});
+
+// serve empty favicon
+server.route({
+  method: 'GET',
+  path: '/favicon.ico',
+  handler: function(request, reply) {
+    reply();
+  }
+});
+
+server.route({
+  method: 'GET',
+  path: '/bump-version',
+  handler: bumpVersion
+});
+
+server.route({
+  method: 'GET',
+  path: '/remove-manifest',
+  handler: removeManifest
+});
+
+// Serve static assets in public
+server.route({
+  method: 'GET',
+  path: '/{param*}',
+  handler: {
+    directory: {
+      path: './demo'
+    }
+  }
+});
 
 
-function page(response) {
-  var html = fs.readFileSync(__dirname + '/../demo/index.html').toString();
-  html = html.replace('{timestamp}', timestamp);
-  html = html.replace('{revision}', revision);
 
-  // simulate a slow connection
-  setTimeout(function() {
-    response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-    response.write(html + '\n');
-    response.end();
-  }, 100);
-}
+// Start the server
+server.start(function () {
+  console.log('AppCache demo server running at %s\nCTRL + C to shutdown', server.info.uri);
+});
 
-function loader(response) {
-  var html = fs.readFileSync(__dirname + '/../appcache-loader.html').toString();
-
-  response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-  response.write(html + '\n');
-  response.end();
-}
-
-function manifest(response) {
+function manifest(request, reply) {
   var text;
+  var response;
 
   if (manifestRemoved) {
-    response.writeHead(404);
-    response.end();
+    reply().code(404);
     return;
   }
 
   text = fs.readFileSync(__dirname + '/../demo/manifest.appcache').toString();
-  text += '\n# last change: ' + timestamp;
+  text += '\n# last change: ' + timestamp + '\n';
 
-  response.writeHead(200, {'Content-Type': 'text/cache-manifest'});
-  response.write(text + '\n');
-  response.end();
+  reply(text).type('text/cache-manifest');
 }
 
-function script(response) {
-  var content = fs.readFileSync(__dirname + '/../appcache-nanny.js').toString();
-
-  response.writeHead(200, {'Content-Type': 'application/x-javascript'});
-  response.write(content + '\n');
-  response.end();
+function bumpVersion(request, reply) {
+  version++;
+  timestamp = moment().format('H:mm:ss');
+  reply(version);
 }
 
-console.log('AppCache demo server running at\n  => http://localhost:' + port + '/\nCTRL + C to shutdown');
+var manifestRemoved = false;
+function removeManifest(request, reply) {
+  manifestRemoved = true;
+  reply('manifest removed');
+}

@@ -2,6 +2,8 @@ CACHE MANIFEST
 
 CACHE:
 /
+/style.css
+/script.js
 /appcache-nanny.js
 
 FALLBACK:
