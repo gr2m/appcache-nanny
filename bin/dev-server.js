@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 'use strict';
 var http = require('http'),
     url = require('url'),
@@ -45,7 +47,7 @@ function empty(response) {
 
 
 function page(response) {
-  var html = fs.readFileSync('./index.html').toString();
+  var html = fs.readFileSync(__dirname + '/../demo/index.html').toString();
   html = html.replace('{timestamp}', timestamp);
   html = html.replace('{revision}', revision);
 
@@ -54,11 +56,11 @@ function page(response) {
     response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
     response.write(html + '\n');
     response.end();
-  }, 0);
+  }, 100);
 }
 
 function loader(response) {
-  var html = fs.readFileSync('../appcache-loader.html').toString();
+  var html = fs.readFileSync(__dirname + '/../appcache-loader.html').toString();
 
   response.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
   response.write(html + '\n');
@@ -74,7 +76,7 @@ function manifest(response) {
     return;
   }
 
-  text = fs.readFileSync('./manifest.appcache').toString();
+  text = fs.readFileSync(__dirname + '/../demo/manifest.appcache').toString();
   text += '\n# last change: ' + timestamp;
 
   response.writeHead(200, {'Content-Type': 'text/cache-manifest'});
@@ -83,11 +85,11 @@ function manifest(response) {
 }
 
 function script(response) {
-  var script = fs.readFileSync('../appcache-nanny.js').toString();
+  var content = fs.readFileSync(__dirname + '/../appcache-nanny.js').toString();
 
   response.writeHead(200, {'Content-Type': 'application/x-javascript'});
-  response.write(script + '\n');
+  response.write(content + '\n');
   response.end();
 }
 
-console.log('AppCache debug server running at\n  => http://localhost:' + port + '/\nCTRL + C to shutdown');
+console.log('AppCache demo server running at\n  => http://localhost:' + port + '/\nCTRL + C to shutdown');

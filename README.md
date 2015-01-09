@@ -86,10 +86,8 @@ Demo
 The appCache Nanny comes with a simple server for testing. Start it using Node:
 
 ```js
-cd server
-node index.js
-# optionally pass a custom port number:
-# node index.js 1234
+npm start
+# or: `npm start 1234` to set port to 1234
 ```
 
 It will start a local server at http://localhost:8888 (per default).
