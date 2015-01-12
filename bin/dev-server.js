@@ -10,8 +10,7 @@ var url = require('url');
 var fs = require('fs');
 var moment = require('moment');
 var PORT = 8888;
-// var HOSTNAME = '127.0.0.1'
-var HOSTNAME = '0.0.0.0'
+var HOSTNAME = '127.0.0.1'
 
 var server = new Hapi.Server();
 
