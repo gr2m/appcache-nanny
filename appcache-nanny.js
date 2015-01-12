@@ -133,6 +133,7 @@
   // stop auto updating
   //
   appCacheNanny.stop = function stop() {
+    if (! isCheckingForUpdatesFlag) return;
     clearInterval(intervalPointer);
     isCheckingForUpdatesFlag = false;
     trigger('stop');
