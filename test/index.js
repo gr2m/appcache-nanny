@@ -1,22 +1,10 @@
 /* global describe, it, after */
-module.exports = function(browser, callback) {
+module.exports = function(browser, options, callback) {
   var error = null;
 
   function setError(err) {
     error = err;
   }
-
-  // describe('funk', function() {
-  //   it('should set version to 1', function() {
-  //     return browser
-  //       .elementByCss('#version').text()
-  //       .should.become('1');
-  //   });
-  // });
-
-  // after(function() {
-  //   return browser.quit().then(callback);
-  // });
 
   browser
     // version is loaded from server set with JavaScript asynchronously
@@ -32,16 +20,11 @@ module.exports = function(browser, callback) {
     .elementByCss('#logs').text()
       .should.eventually.match(/cached/)
 
-
-    // reload page
-    .refresh()
+    // non-existing paths should no load due to the appCache FALLBACK: / /
+    .get(options.baseUrl + '/appcache-fallback-test')
 
     // Is cached? should become "yes"
-    .waitForConditionInBrowser('document.body.hasAttribute("data-iscached")', 10 * 1000)
-
-    // .elementByCss('document.body.hasAttribute("data-iscached")').isDisplayed()
-    .safeEval('document.body.hasAttribute("data-iscached")')
-      .should.become(true)
+    .waitForConditionInBrowser('document.body.dataset.iscached === "1"', 10 * 1000)
 
     // check for update
     .elementByCss('#btn-check').click()
@@ -56,7 +39,7 @@ module.exports = function(browser, callback) {
       // https://github.com/gr2m/appcache-nanny/issues/7
       // Note: despite having the exact same setup on saucelabs as locally,
       //       I was not able to reproduce the bug. Leaving this test for reference
-      throw new Error('"noupdate" event should only be triggered once')
+      throw new Error('"noupdate" event should only be triggered once');
     }, function () {
       // expected error, ignore
     })

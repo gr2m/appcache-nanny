@@ -52,7 +52,7 @@ request({
     document.body.setAttribute('data-iscached', '1');
   },
   onError: function() {
-    console.log('You can the failing request to /non-existing. It\'s just a test if the app is cached or not.')
+    console.log('You can ignore the failing request to /non-existing. It\'s just a test if the app is cached or not.')
   }
 });
 

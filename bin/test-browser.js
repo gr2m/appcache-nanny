@@ -14,7 +14,7 @@ var accessKey = process.env.SAUCE_ACCESS_KEY;
 // process.env.CLIENT is a colon seperated list of
 // browserName:browserVerion:platform
 var tunnelId = process.env.TRAVIS_JOB_NUMBER || 'tunnel-' + Date.now();
-var tmp = (process.env.CLIENT || 'selenium:phantomjs').split(':');
+var tmp = (process.env.CLIENT || 'selenium:firefox').split(':');
 var client = {
   runner: tmp[0],
   browserName: tmp[1],
@@ -79,7 +79,9 @@ function startTest(browser, subProcess) {
     .deleteAllCookies()
     .get(devServer.info.uri);
 
-  test(browser, function(error) {
+  test(browser, {
+    baseUrl: devServer.info.uri
+  }, function(error) {
     var status = error ? 3 : 0;
 
     if (error) {
