@@ -51,8 +51,13 @@ request({
   onSuccess: function() {
     document.body.setAttribute('data-iscached', '1');
   },
-  onError: function() {
+  onError: function(xhr) {
     console.log('You can ignore the failing request to /non-existing. It\'s just a test if the app is cached or not.')
+
+    // IE response with error code, but returns the text
+    if (/appCache Demo page/.test(xhr.responseText)) {
+      document.body.setAttribute('data-iscached', '1');
+    }
   }
 });
 

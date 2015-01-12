@@ -76,7 +76,6 @@ function startTest(browser, subProcess) {
       retryDelay: 100,
     })
 
-    .deleteAllCookies()
     .get(devServer.info.uri);
 
   test(browser, {

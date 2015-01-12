@@ -23,6 +23,9 @@ module.exports = function(browser, options, callback) {
     // non-existing paths should no load due to the appCache FALLBACK: / /
     .get(options.baseUrl + '/appcache-fallback-test')
 
+    .elementByCss('#version').text()
+      .should.become('1')
+
     // Is cached? should become "yes"
     .waitForConditionInBrowser('document.body.dataset.iscached === "1"', 10 * 1000)
 
