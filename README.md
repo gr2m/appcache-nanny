@@ -71,6 +71,12 @@ If you use [bower](http://bower.io/), you can install it using:
 bower install --save appcache-nanny
 ```
 
+Or install via [npm](https://www.npmjs.com/)
+
+```
+npm install --save appcache-nanny
+```
+
 Background
 ----------
 
