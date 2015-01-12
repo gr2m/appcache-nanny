@@ -221,6 +221,17 @@
       return;
     }
 
+    // https://github.com/gr2m/appcache-nanny/issues/7
+    if (applicationCache.status !== applicationCache.UNCACHED) {
+      subscribeToEvents();
+      setupPending = false;
+      setupDone = true;
+      setupCallbacks.forEach(function(callback) {
+        callback();
+      });
+      return;
+    }
+
     // load the appcache-loader.html using an iframe
     iframe = document.createElement('iframe');
     iframe.src = nannyOptions.loaderPath;
