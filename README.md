@@ -85,6 +85,8 @@ or a prompt asking the user to reload the page. And it works very well so far.
 Demo
 ----
 
+![appCacheNanny demo screencast](https://raw.github.com/gr2m/appcache-nanny/master/demo/demo.gif)
+
 The appCache Nanny comes with a simple server for testing. Start it using Node:
 
 ```js
