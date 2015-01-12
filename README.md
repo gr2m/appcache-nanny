@@ -89,24 +89,17 @@ The appCache Nanny comes with a simple server for testing. Start it using Node:
 
 ```js
 npm start
-# or: `npm start 1234` to set port to 1234
 ```
 
-It will start a local server at http://localhost:8888 (per default).
+It will start a local server at http://localhost:8888.
 
-Each time the `index.html` gets loaded, the background changes. Try by reloading
-the page. Then hit the `Check for update` button, you will see a few log meesages
-below. If you reload the page again, the color will change one more time (it's the
-index.html that just got downloaded in the background). But if you reload again,
-it won't change any more. You can now stop the server, you will still be able to
-restart the page.
+This is a static server with a few hidden features:
 
-In order to simulate a change in the application, hit the `Bump revision` button
-(make sure to start the server again beforehand). If you check for an update again,
-you will see that a new version got downloaded, it now says `has update? yes` on top.
-
-Note that every path will show the index.html file, try http://localhost:8888/some/path
-for example.
+- `GET /bump-version` increases the app version, so an update gets triggered
+  on next check
+- `GET /remove-manifest` makes `GET /manifest.appcache` return 404, so it
+  becomes obsolete on next check
+- `GET /recreate-manifest` undoes the previous step.
 
 
 Gotchas
