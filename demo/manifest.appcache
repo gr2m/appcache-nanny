@@ -5,6 +5,7 @@ CACHE:
 /style.css
 /script.js
 /appcache-nanny.js
+/version.js
 
 FALLBACK:
 / /

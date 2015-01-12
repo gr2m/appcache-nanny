@@ -9,7 +9,7 @@ var util = require('util');
 var url = require('url');
 var fs = require('fs');
 var moment = require('moment');
-var port = process.argv[2] || 8888;
+var PORT = 8888;
 
 var server = new Hapi.Server();
 
@@ -18,8 +18,8 @@ var timestamp = moment().format('H:mm:ss');
 var manifestRemoved;
 
 server.connection({
-  host: 'localhost',
-  port: 8888
+  host: '127.0.0.1',
+  port: PORT
 });
 
 // Serve dynamic js file to set version / timestamp
@@ -79,6 +79,11 @@ server.route({
   path: '/remove-manifest',
   handler: removeManifest
 });
+server.route({
+  method: 'GET',
+  path: '/recreate-manifest',
+  handler: recreateManifest
+});
 
 // Serve static assets in public
 server.route({
@@ -93,10 +98,6 @@ server.route({
 
 
 
-// Start the server
-server.start(function () {
-  console.log('AppCache demo server running at %s\nCTRL + C to shutdown', server.info.uri);
-});
 
 function manifest(request, reply) {
   var text;
@@ -123,4 +124,17 @@ var manifestRemoved = false;
 function removeManifest(request, reply) {
   manifestRemoved = true;
   reply('manifest removed');
+}
+function recreateManifest(request, reply) {
+  manifestRemoved = false;
+  reply('manifest recreated');
+}
+
+
+if (require.main === module) {
+  server.start(function () {
+    console.log('AppCache demo server running at %s\nCTRL + C to shutdown', server.info.uri);
+  });
+} else {
+  module.exports = server;
 }

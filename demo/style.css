@@ -5,6 +5,17 @@ html {
 body {
   margin: 0;
 }
+
+[data-iscached="0"] .if-iscached,
+[data-iscached="1"] .unless-iscached,
+[data-hasupdate="0"] .if-hasupdate,
+[data-hasupdate="1"] .unless-hasupdate,
+[data-isautoupdating="0"] .if-isautoupdating,
+[data-isautoupdating="1"] .unless-isautoupdating,
+[data-haslogs="0"] .if-haslogs,
+[data-haslogs="1"] .unless-haslogs {
+  display: none;
+}
 header {
   padding: 1em;
   background: #eee;
@@ -15,6 +26,9 @@ h1 small {
   font-weight: normal;
   font-size: 0.5em;
 }
+small {
+  opacity: .5;
+}
 table {
   width: 100%;
 }
@@ -23,6 +37,7 @@ th {
   white-space: nowrap;
   width: 1px;
   padding-right: .5em;
+  min-width: 130px;
 }
 td, th {
   border-top: 1px solid #000;
@@ -38,10 +53,15 @@ button {
   color: #fff;
   border-radius: 4px;
 }
+
 #logs p {
   padding: 1em;
   margin: 0;
-  border-radius: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+#logs + p {
+  padding: 1em;
+  margin: 0;
 }
 #logs strong {
   font-size: .8em;
@@ -50,7 +70,10 @@ button {
   padding: .2em .4em;
   color: #fff;
 }
-#logs .appCacheNanny strong {
+#logs .command strong {
+  background: #333;
+}
+#logs .event strong {
   background: #36F;
 }
 #logs .error strong {

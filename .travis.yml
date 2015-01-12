@@ -1,0 +1,25 @@
+language: node_js
+node_js:
+- "0.10"
+
+before_script:
+- "export DISPLAY=:99.0"
+- "sh -e /etc/init.d/xvfb start"
+- "sleep 5"
+
+  # Workaround for Selenium #3280 issue
+- "sudo sed -i 's/^127\\.0\\.0\\.1.*$/127.0.0.1 localhost/' /etc/hosts"
+
+script: npm run test
+
+env:
+  global:
+  - secure: bnOpKpJaTriFt27dpF+vxkRFynk3UwBN1y21vxBlGn1kJ8g+uCOTWBKNZhlBCGjRjZuAUlCGbv5G6UTBtkzetZSoNAkQcbnBu4rqxwa3BaaWPK/kOsCQiOfV3+irh6/1t3/IfUnfBVoLkYYAvIU0Ppc5J+rUjTl01uAEmnxtXF0=
+  - secure: MsmS6Zvy7IdfOAq+SVE+2FEzHZAGpBBOcFdWi+EdZ4hpiA5BAsjxOumXAOB5erNDmHvaT2K/PdJuE7HXqWOlVKfPvBVjmJqNot3RGAdw2pUMlu9VS+GEjXHqB0B7ilNYIYqZLSjiGO0UIM6lc9j34Qz8X/DCcwbmG2SDmtaBdfk=
+
+  matrix:
+  - CLIENT=saucelabs:firefox
+  - CLIENT=saucelabs:chrome
+  - CLIENT=saucelabs:safari:6
+  - CLIENT="saucelabs:iphone:7.1:OS X 10.9"
+  - CLIENT="saucelabs:internet explorer:10:Windows 8"

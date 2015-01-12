@@ -4,7 +4,7 @@
   "description": "Teaches the applicationCache douchebag some manners!",
   "main": "appcache-nanny.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node ./bin/test-browser.js",
     "start": "node ./bin/dev-server.js"
   },
   "repository": {
@@ -24,11 +24,14 @@
   "homepage": "https://github.com/gr2m/appcache-nanny",
   "devDependencies": {
     "chai": "^1.10.0",
-    "expect.js": "^0.3.1",
+    "chai-as-promised": "^4.1.1",
+    "colors": "^1.0.3",
+    "hapi": "^8.1.0",
     "mocha": "^2.1.0",
-    "moment": "^2.8.4"
+    "moment": "^2.9.0",
+    "sauce-connect-launcher": "^0.9.3",
+    "selenium-standalone": "^2.44.0-4",
+    "wd": "^0.3.11"
   },
-  "dependencies": {
-    "hapi": "^8.1.0"
-  }
+  "dependencies": {}
 }

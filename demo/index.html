@@ -5,7 +5,7 @@
   <title>appCache Demo page</title>
   <link rel="stylesheet" type="text/css" href="/style.css">
 </head>
-<body>
+<body data-iscached="0" data-hasupdate="0" data-isautoupdating="0" data-haslogs="0">
 
   <header>
     <h1>
@@ -16,41 +16,68 @@
     <table>
       <tr>
         <th>
+          is cached?
+        </th>
+        <td>
+          <div class="if-iscached">
+            yes
+          </div>
+          <div class="unless-iscached">
+            no<br>
+            <button id="btn-cache" onclick="check()">Cache now</button>
+          </div>
+        </td>
+      </tr>
+      <tr class="if-iscached">
+        <th>
           has update?
         </th>
         <td>
-          <div id="hasUpdate">no</div>
-          <button onclick="appCacheNanny.update()">Check now</button>
+          <div class="if-hasupdate">
+            yes
+            <small>(no more events will be triggered)</small><br>
+            <button id="btn-apply" onclick="location.reload(1)">apply update</button>
+          </div>
+          <div class="unless-hasupdate">
+            no<br>
+            <button id="btn-check" onclick="check()">Check now</button>
+          </div>
+
         </td>
       </tr>
-      <tr>
+      <tr class="if-iscached unless-hasupdate">
         <th>
-          Checking for updates?
+          Is autoupdating?
         </th>
         <td>
-          <div id="isChecking">no</div>
-          <button onclick="start()" id="start">Start auto updating</button>
-          <button onclick="stop()" id="stop" style="display:none;">Stop auto updating</button>
+          <div class="unless-isautoupdating">
+            no<br>
+            <button id="btn-start" onclick="start()" id="start">Start</button>
+            <button id="btn-start-fast" onclick="start(3000)" id="start">Start <small>(3s interval)</small></button>
+          </div>
+          <div class="if-isautoupdating">
+            yes<br>
+            <button id="btn-stop" onclick="stop()" id="stop">Stop auto updating</button>
+          </div>
         </td>
       </tr>
-      <tr>
+      <tr class="if-iscached unless-hasupdate">
         <th>Server</th>
         <td>
           <div>
-            <button onclick="bumpRevision()">Create new version</button>
-            <button onclick="removeManifest()">Remove manifest</button>
+            <button id="btn-bump-version" onclick="bumpVersion()">Create new version</button>
+            <button id="btn-remove-manifest" onclick="removeManifest()">Remove manifest</button>
           </div>
         </td>
       </tr>
     </table>
-
-    <p>
-      <button onclick="clearLogs()">Clear logs</button>
-    </p>
-
   </header>
 
   <div id="logs"></div>
+  <p class="if-haslogs">
+    <button onclick="clearLogs()">Clear logs</button>
+  </p>
+
   <script src="/version.js"></script>
   <script src="/appcache-nanny.js"></script>
   <script src="/script.js"></script>
