@@ -152,7 +152,7 @@ on applicationCache. I'd like to highlight
 * **[Financial Times Lab Team](http://labs.ft.com)**: [Tutorial: How to make an offline HTML5 web app](http://labs.ft.com/category/tutorial/),
   also recommended: [Andrew Betts – Offline rules](http://www.youtube.com/watch?v=Ut4R4udJ4Gw)
 * **[Eric Bidelman](https://twitter.com/ebidel)**: [A Beginner's Guide to Using the Application Cache](http://www.html5rocks.com/en/tutorials/appcache/beginner/)
-* [Appcache Facts](http://appcachefacts.info/) by [Mark Christian](https://twitter.com/shinypb) & [Peter Lubbers](https://twitter.com/peterlubbers)
+* [Appcache Facts](http://appcache.offline.technology/) by [Mark Christian](https://twitter.com/shinypb) & [Peter Lubbers](https://twitter.com/peterlubbers)
 
 
 TODOs / IDEAs
