@@ -14,8 +14,8 @@ script: npm run test
 
 env:
   global:
-  - secure: bnOpKpJaTriFt27dpF+vxkRFynk3UwBN1y21vxBlGn1kJ8g+uCOTWBKNZhlBCGjRjZuAUlCGbv5G6UTBtkzetZSoNAkQcbnBu4rqxwa3BaaWPK/kOsCQiOfV3+irh6/1t3/IfUnfBVoLkYYAvIU0Ppc5J+rUjTl01uAEmnxtXF0=
-  - secure: MsmS6Zvy7IdfOAq+SVE+2FEzHZAGpBBOcFdWi+EdZ4hpiA5BAsjxOumXAOB5erNDmHvaT2K/PdJuE7HXqWOlVKfPvBVjmJqNot3RGAdw2pUMlu9VS+GEjXHqB0B7ilNYIYqZLSjiGO0UIM6lc9j34Qz8X/DCcwbmG2SDmtaBdfk=
+    - secure: lSlkRu9CXE5+ZdlPKa18EEK9Uz6JoS//E5VblRm4dqPiVQKMvIBY8/j5qJIoIWMfZ+YIkd7VUrHPDUC6OWGvpCZ8uQtB8IyWytoB22CAP2pu/3cP3fwFU/jKaejTMkorH8kvMMjRFx7OaKUu9ODvtSgAxCUW2JhVpxpOpaIxBm0=
+    - secure: SGYYo3CDBFJWtmEDTQ8Llo+ReRo/hFHskt5ghKTmpbZsTwLWgEepGLZbg+ABwbCpn4V0vkFMC8FJ/9x6uqsFgNOlGet5M/cUFcgUCTUnqT1jKe4a2QOdXT9udFyYrmgydAWbuMaN2kAXKWgOjWLcVF5Aa0+mO8iQpV4oet5+oq4=
 
   matrix:
   - CLIENT=saucelabs:firefox
