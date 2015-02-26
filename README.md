@@ -59,10 +59,10 @@ Setup
    of your app, next to `/appcache-loader.html`. If you use a different
    name, make sure to set it accordingly in `appcache-loader.html`.
 
-Then load the `appache-nanny.js` on your HTML pages.
+Then load the `appcache-nanny.js` on your HTML pages.
 
 ```html
-<script src="appache-nanny.js" async></script>
+<script src="appcache-nanny.js" async></script>
 ```
 
 If you use [bower](http://bower.io/), you can install it using:
