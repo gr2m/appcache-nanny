@@ -18,7 +18,7 @@ env:
     - secure: SGYYo3CDBFJWtmEDTQ8Llo+ReRo/hFHskt5ghKTmpbZsTwLWgEepGLZbg+ABwbCpn4V0vkFMC8FJ/9x6uqsFgNOlGet5M/cUFcgUCTUnqT1jKe4a2QOdXT9udFyYrmgydAWbuMaN2kAXKWgOjWLcVF5Aa0+mO8iQpV4oet5+oq4=
 
   matrix:
-  - CLIENT=saucelabs:firefox
+  - CLIENT=saucelabs:firefox:34 # pinning version, see https://code.google.com/p/selenium/issues/detail?id=8390
   - CLIENT=saucelabs:chrome
   - CLIENT=saucelabs:safari:6
   - CLIENT="saucelabs:iphone:8.1:OS X 10.9"

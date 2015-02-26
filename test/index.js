@@ -7,6 +7,8 @@ module.exports = function(browser, options, callback) {
   }
 
   browser
+    .execute('return navigator.userAgent')
+
     // version is loaded from server set with JavaScript asynchronously
     .elementByCss('#version').text()
       .should.become('1')
@@ -16,7 +18,7 @@ module.exports = function(browser, options, callback) {
     // when clicked on cache button, "cached" event should eventually appear
     .elementByCss('#btn-cache').click()
 
-    .waitForConditionInBrowser('document.querySelector("#logs").textContent.search(/cached/) >= 0', 10 * 1000)
+    .waitForConditionInBrowser('((document.querySelector("#logs") && document.querySelector("#logs").textContent) || "").indexOf("cached") >= 0', 10 * 1000, 1000)
     .elementByCss('#logs').text()
       .should.eventually.match(/cached/)
 
