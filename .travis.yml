@@ -6,16 +6,35 @@ before_script:
 - "export DISPLAY=:99.0"
 - "sh -e /etc/init.d/xvfb start"
 - "sleep 5"
+- curl -Lo travis_after_all.py https://raw.github.com/dmakhno/travis_after_all/master/travis_after_all.py
 
-  # Workaround for Selenium #3280 issue
-- "sudo sed -i 's/^127\\.0\\.0\\.1.*$/127.0.0.1 localhost/' /etc/hosts"
+after_success:
+  - python travis_after_all.py
+  - export $(cat .to_export_back)
+after_failure:
+  - python travis_after_all.py
+  - export $(cat .to_export_back)
+before_deploy:
+  - rm -f travis_after_all.py .to_export_back
+after_script:
+  - echo leader=$BUILD_LEADER status=$BUILD_AGGREGATE_STATUS
 
 script: npm run test
 
+cache:
+  directories:
+  - node_modules
+
+notifications:
+  email: false
+
 env:
   global:
-    - secure: lSlkRu9CXE5+ZdlPKa18EEK9Uz6JoS//E5VblRm4dqPiVQKMvIBY8/j5qJIoIWMfZ+YIkd7VUrHPDUC6OWGvpCZ8uQtB8IyWytoB22CAP2pu/3cP3fwFU/jKaejTMkorH8kvMMjRFx7OaKUu9ODvtSgAxCUW2JhVpxpOpaIxBm0=
-    - secure: SGYYo3CDBFJWtmEDTQ8Llo+ReRo/hFHskt5ghKTmpbZsTwLWgEepGLZbg+ABwbCpn4V0vkFMC8FJ/9x6uqsFgNOlGet5M/cUFcgUCTUnqT1jKe4a2QOdXT9udFyYrmgydAWbuMaN2kAXKWgOjWLcVF5Aa0+mO8iQpV4oet5+oq4=
+  # Sauce Labs
+  - secure: lSlkRu9CXE5+ZdlPKa18EEK9Uz6JoS//E5VblRm4dqPiVQKMvIBY8/j5qJIoIWMfZ+YIkd7VUrHPDUC6OWGvpCZ8uQtB8IyWytoB22CAP2pu/3cP3fwFU/jKaejTMkorH8kvMMjRFx7OaKUu9ODvtSgAxCUW2JhVpxpOpaIxBm0=
+  - secure: SGYYo3CDBFJWtmEDTQ8Llo+ReRo/hFHskt5ghKTmpbZsTwLWgEepGLZbg+ABwbCpn4V0vkFMC8FJ/9x6uqsFgNOlGet5M/cUFcgUCTUnqT1jKe4a2QOdXT9udFyYrmgydAWbuMaN2kAXKWgOjWLcVF5Aa0+mO8iQpV4oet5+oq4=
+  # GitHub Token
+  - secure: RLKScBWbBKaZwUSEduxQdgnNP8XrBrC1xsTVgIM9yNCJqmYptPscXAAlUfsDewbBgTqkB52/ExfiEq/Y+V8cWDBMvBpWQIZgtQ57suLGU6whdYO3toDzrJMcnBfstRup3tHR6BcwARM63xkRipBn3gG32LZ7ogjbjJiJv33bFLU=
 
   matrix:
   - CLIENT=saucelabs:firefox:34 # pinning version, see https://code.google.com/p/selenium/issues/detail?id=8390
@@ -25,3 +44,15 @@ env:
   - CLIENT="saucelabs:internet explorer:11:Windows 8.1"
   # FIXME:
   # - CLIENT="saucelabs:internet explorer:10:Windows 8"
+
+# https://github.com/boennemann/semantic-release#ci-server
+deploy:
+  provider: npm
+  email: gregor@martynus.net
+  skip_cleanup: true
+
+  api_key:
+    secure: gBql+OfVKKxxLl6qdu9DbueEHE4K0vk6dWJ8mXUtJkpUkHOYuZkHm6fwH5u+o9SAq7smcOT3JidL8MvyAs8yD041Ks1zFsfzzy3nSqpEU5bSFkc/Xat8u/9o27nMWRdFof1xK1cTB1JBi2trOBU7ZQ9ggM/eaGvcwbm0Hin1skI=
+  on:
+    branch: master
+    repo: gr2m/appcache-nanny

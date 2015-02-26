@@ -1,11 +1,13 @@
 {
   "name": "appcache-nanny",
-  "version": "1.0.0",
+  "version": "0.0.0-semantically-released",
   "description": "Teaches the applicationCache douchebag some manners!",
   "main": "appcache-nanny.js",
   "scripts": {
     "test": "node ./bin/test-browser.js",
-    "start": "node ./bin/dev-server.js"
+    "start": "node ./bin/dev-server.js",
+    "prepublish": "semantic-release pre",
+    "postpublish": "semantic-release post"
   },
   "repository": {
     "type": "git",
@@ -31,6 +33,7 @@
     "moment": "^2.9.0",
     "sauce-connect-launcher": "^0.9.3",
     "selenium-standalone": "^2.44.0-4",
+    "semantic-release": "^3.0.2",
     "wd": "^0.3.11"
   },
   "dependencies": {}
