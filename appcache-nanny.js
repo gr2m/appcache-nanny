@@ -294,9 +294,9 @@
   // Trigger event on appCacheNanny. Once an update is ready, we
   // keep looking for another update, but we stop triggering events.
   //
-  function trigger(eventName, e) {
+  function trigger(eventName, event) {
     if (hasUpdateFlag) return;
-    appCacheNanny.trigger(eventName, e);
+    appCacheNanny.trigger(eventName, event);
   }
 
   //
