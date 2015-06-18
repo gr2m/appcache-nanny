@@ -76,6 +76,9 @@ function clearLogs() {
 }
 
 function check() {
+  if (document.getElementById('chk-progress').checked)
+    listenProgress();
+
   log('command', 'appCacheNanny.update()');
   appCacheNanny.update();
 }
@@ -134,7 +137,27 @@ function createManifest () {
   });
 }
 
+function listenProgress() {
+  var lastfile;
 
+  appCacheNanny.on('progress', function(e) {
+    var loaded  = e.loaded,
+        total   = e.total,
+        status  = Math.round(loaded / total * 100),
+        toLoad  = '';
+    if (loaded !== 0) {
+      var ms = (e.timeStamp - lastfile);
+      ms = ms !== 0 ? ms : ' < 1';
+
+      toLoad = '. Time to load last file: ' + ms + 'ms'
+    }
+
+    log('event', 'Already loaded ' + loaded + ' from ' + total + ' (' + status + '%) ' + toLoad);
+ 
+    lastfile = e.timeStamp
+
+  });
+}
 
 function request(options) {
   var req = new XMLHttpRequest();
