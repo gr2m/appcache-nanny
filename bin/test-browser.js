@@ -100,7 +100,7 @@ function startTest(browser, subProcess) {
 }
 
 function startSelenium(callback) {
-  selenium({}, {}, function() {
+  selenium.start(function() {
     var browser = wd.promiseChainRemote();
     callback(browser);
   });
