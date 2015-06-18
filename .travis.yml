@@ -44,13 +44,6 @@ notifications:
   email: false
 
 env:
-  global:
-  # Sauce Labs
-  - secure: lSlkRu9CXE5+ZdlPKa18EEK9Uz6JoS//E5VblRm4dqPiVQKMvIBY8/j5qJIoIWMfZ+YIkd7VUrHPDUC6OWGvpCZ8uQtB8IyWytoB22CAP2pu/3cP3fwFU/jKaejTMkorH8kvMMjRFx7OaKUu9ODvtSgAxCUW2JhVpxpOpaIxBm0=
-  - secure: SGYYo3CDBFJWtmEDTQ8Llo+ReRo/hFHskt5ghKTmpbZsTwLWgEepGLZbg+ABwbCpn4V0vkFMC8FJ/9x6uqsFgNOlGet5M/cUFcgUCTUnqT1jKe4a2QOdXT9udFyYrmgydAWbuMaN2kAXKWgOjWLcVF5Aa0+mO8iQpV4oet5+oq4=
-  # GitHub Token
-  - secure: RLKScBWbBKaZwUSEduxQdgnNP8XrBrC1xsTVgIM9yNCJqmYptPscXAAlUfsDewbBgTqkB52/ExfiEq/Y+V8cWDBMvBpWQIZgtQ57suLGU6whdYO3toDzrJMcnBfstRup3tHR6BcwARM63xkRipBn3gG32LZ7ogjbjJiJv33bFLU=
-
   matrix:
   - CLIENT=saucelabs:firefox:34 # pinning version, see https://code.google.com/p/selenium/issues/detail?id=8390
   - CLIENT=saucelabs:chrome
