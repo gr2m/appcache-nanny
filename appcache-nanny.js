@@ -67,6 +67,10 @@
     offlineCheckInterval: DEFAULT_CHECK_INTERVAL
   };
 
+  var iframe;
+  var setupDone = false;
+  var setupPending = false;
+
   //
   //
   //
@@ -105,8 +109,6 @@
   // overwrite the current.
   //
   var intervalPointer;
-  var setupDone = false;
-  var setupPending = false;
   appCacheNanny.start = function start(options) {
     if (options) appCacheNanny.set(options);
 
@@ -209,7 +211,6 @@
   var APPCACHE_STORE_KEY = '_appcache_nanny';
   var setupCallbacks = [];
   function setup() {
-    var iframe;
     var scriptTag;
 
     try {
@@ -244,9 +245,14 @@
       subscribeToEvents();
       setupPending = false;
       setupDone = true;
-      setupCallbacks.forEach(function(callback) {
-        callback();
-      });
+
+      // adding a timeout prevented Safari 7.1.4 from throwing
+      // a InvalidStateError on the first applicationCache.update() call
+      setTimeout(function () {
+        setupCallbacks.forEach(function(callback) {
+          callback();
+        });
+      }, 100);
     };
     iframe.onerror = function() {
       throw new Error('/appcache-loader.html could not be loaded.');
@@ -274,7 +280,6 @@
     // fired when manifest download succeeded
     on('noupdate',     handleNetworkSucces);
     on('cached',       handleNetworkSucces);
-    on('updateready',  handleNetworkSucces);
     on('progress',     handleNetworkSucces);
     on('downloading',  handleNetworkSucces);
 
@@ -302,19 +307,26 @@
   //
   //
   //
+  var pendingUpdateReady = false;
   function handleUpdateReady () {
-    // I have seen both Chorme & Firefox throw exceptions when trying
-    // to swap cache on updateready. I was not able to reproduce it,
-    // but for the sake of sanity, I'm making it fail silently
-    try {
+    // Safari and Firefox (in private mode) can get into an invalid
+    // applicationCache state, which throws an InvalidStateError error
+    // on applicationCache.swapCache(). To workaround that, we reset
+    // everything and set a flag that the next "noupdate" event, that
+    // will now be triggered when the iframe gets reloadd, is actually
+    // an "updateready" event.
+    if (applicationCache.status !== applicationCache.UPDATEREADY) {
+      pendingUpdateReady = true;
+      reset();
+      return;
+    }
 
-      if (! hasUpdateFlag) {
-        hasUpdateFlag = true;
-        // don't use trigger here, otherwise the event wouldn't get triggered
-        appCacheNanny.trigger('updateready');
-      }
-      applicationCache.swapCache();
-    } catch(error) {}
+    if (! hasUpdateFlag) {
+      hasUpdateFlag = true;
+      // don't use trigger here, otherwise the event wouldn't get triggered
+      appCacheNanny.trigger('updateready');
+    }
+    applicationCache.swapCache();
   }
 
   //
@@ -335,9 +347,13 @@
       }
     }
 
-
     // re-trigger event via appCacheNanny
-    trigger(prefix + event.type);
+    if (pendingUpdateReady) {
+      trigger('updateready')
+      pendingUpdateReady = false
+    } else {
+      trigger(prefix + event.type);
+    }
 
     if (! hasNetworkError) return;
     hasNetworkError = false;
@@ -385,6 +401,16 @@
     // Once applicationCache status is obsolete, calling .udate() throws
     // an error, so we stop checking here
     appCacheNanny.stop();
+  }
+
+  function reset () {
+    if (iframe) {
+      iframe.remove();
+    }
+
+    setupDone = false;
+    setupPending = false;
+    appCacheNanny.update();
   }
 
   return appCacheNanny;
