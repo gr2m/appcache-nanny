@@ -85,7 +85,7 @@ web application, anno 2011. It's battle tested by a ton of users, devices, inter
 
 minutes.io checks every 30 seconds if an update is available. And whenever the user navigates
 from one view to another, it reloads the page in case there is. As the assets are all cached,
-the user cannot tell that his page got just reloaded. It's silent, without any notification,
+the user cannot tell that their page got just reloaded. It's silent, without any notification,
 or a prompt asking the user to reload the page. And it works very well so far.
 
 Demo
