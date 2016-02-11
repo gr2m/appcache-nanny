@@ -5,7 +5,7 @@ The appCache Nanny
 
 [![Build Status](https://travis-ci.org/gr2m/appcache-nanny.svg)](https://travis-ci.org/gr2m/appcache-nanny)
 
-As we all know, the [Application Cache is a Douchbag](http://alistapart.com/article/application-cache-is-a-douchebag).
+As we all know, the [Application Cache is a Douchebag](http://alistapart.com/article/application-cache-is-a-douchebag).
 It's time to teach it some manners – The appCache Nanny for Rescue!
 
 No more manifest attributes on your HTML files. Whether you want to cache
