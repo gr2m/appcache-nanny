@@ -332,7 +332,7 @@
   //
   //
   //
-  function handleNetworkSuccesss(event) {
+  function handleNetworkSuccess(event) {
     var prefix = '';
 
     // when page gets opened for the very first time, it already has
@@ -352,7 +352,7 @@
       trigger('updateready')
       pendingUpdateReady = false
     } else {
-      trigger(prefix + event.type);
+      trigger(prefix + event.type, event);
     }
 
     if (! hasNetworkError) return;
@@ -365,9 +365,9 @@
   //
   //
   //
-  function handleNetworkError () {
+  function handleNetworkError (error) {
     // re-trigger event via appCacheNanny
-    trigger('error');
+    trigger('error', error);
 
     if (hasNetworkError) return;
     hasNetworkError = true;
