@@ -19,8 +19,9 @@ module.exports = function(browser, options, callback) {
     .elementByCss('#btn-cache').click()
 
     .waitForConditionInBrowser('((document.querySelector("#logs") && document.querySelector("#logs").textContent) || "").indexOf("cached") >= 0', 10 * 1000, 1000)
+    // check that progress passes event object with loaded / total
     .elementByCss('#logs').text()
-      .should.eventually.match(/cached/)
+      .should.eventually.match(/progress \(\d+\/\d+\)/)
 
     // non-existing paths should no load due to the appCache FALLBACK: / /
     .get(options.baseUrl + '/appcache-fallback-test')

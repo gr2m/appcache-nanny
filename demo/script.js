@@ -16,8 +16,8 @@
   'online',
   'offline'
 ].forEach(function(eventName) {
-  appCacheNanny.on(eventName, function() {
-    log('event', eventName)
+  appCacheNanny.on(eventName, function(event) {
+    log('event', eventName, event)
   });
 });
 
@@ -61,10 +61,15 @@ request({
   }
 });
 
-function log (type, text) {
+function log (type, text, event) {
   var item = document.createElement('p');
 
-  item.innerHTML = '<strong>'+type+'</strong> ' + text;
+  if (/progress/.test(text)) {
+    item.innerHTML = '<strong>'+type+'</strong> ' + text + ' (' + event.loaded + '/' + event.total + ')';
+  } else {
+    item.innerHTML = '<strong>'+type+'</strong> ' + text;
+  }
+
   item.className = type;
   document.querySelector('#logs').appendChild(item);
   document.body.setAttribute('data-haslogs', '1');
