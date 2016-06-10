@@ -1,17 +1,15 @@
 {
   "name": "appcache-nanny",
-  "version": "0.0.0-semantically-released",
   "description": "Teaches the applicationCache douchebag some manners!",
   "main": "appcache-nanny.js",
   "scripts": {
     "test": "node ./bin/test-browser.js",
     "start": "node ./bin/dev-server.js",
-    "prepublish": "semantic-release pre",
-    "postpublish": "semantic-release post"
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/gr2m/appcache-nanny.git"
+    "url": "https://github.com/gr2m/appcache-nanny.git"
   },
   "keywords": [
     "browser",
@@ -31,10 +29,10 @@
     "hapi": "^8.6.1",
     "mocha": "^2.2.5",
     "moment": "^2.10.3",
-    "sauce-connect-launcher": "^0.11.1",
-    "selenium-standalone": "^4.4.2",
-    "semantic-release": "^3.4.1",
-    "wd": "^0.3.12"
+    "sauce-connect-launcher": "^0.14.0",
+    "selenium-standalone": "^5.1.1",
+    "semantic-release": "^6.3.0",
+    "wd": "^0.4.0"
   },
   "dependencies": {}
 }

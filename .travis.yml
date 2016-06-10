@@ -1,48 +1,18 @@
+sudo: false
 language: node_js
-
-node_js:
-- "0.10"
-
 cache:
   directories:
-  - node_modules
-
-before_script:
-- "export DISPLAY=:99.0"
-- "sh -e /etc/init.d/xvfb start"
-- "sleep 5"
-- curl -o travis_after_all.py https://raw.github.com/dmakhno/travis_after_all/master/travis_after_all.py
-
-after_success:
-  - python travis_after_all.py
-  - export $(cat .to_export_back)
-  - |
-      if [ "$BUILD_LEADER" = "YES" ]; then
-        if [ "$BUILD_AGGREGATE_STATUS" = "others_succeeded" ]; then
-          echo "All Succeded! PUBLISHING..."
-        else
-          echo "Some Failed"
-        fi
-      fi
-after_failure:
-  - python travis_after_all.py
-  - export $(cat .to_export_back)
-  - |
-      if [ "$BUILD_LEADER" = "YES" ]; then
-        if [ "$BUILD_AGGREGATE_STATUS" = "others_failed" ]; then
-          echo "All Failed"
-        else
-          echo "Some Failed"
-        fi
-      fi
-before_deploy:
-  - rm -f travis_after_all.py .to_export_back
-after_script:
-  - echo leader=$BUILD_LEADER status=$BUILD_AGGREGATE_STATUS
-
+    - node_modules
 notifications:
   email: false
-
+node_js:
+  - '4'
+before_install:
+  - npm i -g npm@3
+before_script:
+  - npm prune
+after_success:
+  - npm run semantic-release
 env:
   matrix:
   - CLIENT=saucelabs:firefox:34 # pinning version, see https://code.google.com/p/selenium/issues/detail?id=8390
@@ -50,20 +20,6 @@ env:
   - CLIENT=saucelabs:safari:6
   - CLIENT="saucelabs:iphone:8.1:OS X 10.9"
   - CLIENT="saucelabs:internet explorer:11:Windows 8.1"
-  # FIXME:
-  # - CLIENT="saucelabs:internet explorer:10:Windows 8"
-
-# https://github.com/boennemann/semantic-release#ci-server
-deploy:
-  provider: npm
-  email: gregor@martynus.net
-  skip_cleanup: true
-
-  api_key:
-    secure: gBql+OfVKKxxLl6qdu9DbueEHE4K0vk6dWJ8mXUtJkpUkHOYuZkHm6fwH5u+o9SAq7smcOT3JidL8MvyAs8yD041Ks1zFsfzzy3nSqpEU5bSFkc/Xat8u/9o27nMWRdFof1xK1cTB1JBi2trOBU7ZQ9ggM/eaGvcwbm0Hin1skI=
-  on:
-    branch: master
-    repo: gr2m/appcache-nanny
-    condition: "$BUILD_LEADER$BUILD_AGGREGATE_STATUS = YESothers_succeeded"
-
-sudo: false
+branches:
+  except:
+    - /^v\d+\.\d+\.\d+$/
