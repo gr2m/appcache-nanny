@@ -1,6 +1,5 @@
 {
   "name": "appcache-nanny",
-  "version": "1.0.0",
   "authors": [
     "Gregor Martynus <gregor@martynus.net>"
   ],
@@ -19,8 +18,5 @@
     "bower_components",
     "test",
     "tests"
-  ],
-  "devDependencies": {
-    "bootstrap": "~3.1.0"
-  }
+  ]
 }
