@@ -3,6 +3,7 @@
   "description": "Teaches the applicationCache douchebag some manners!",
   "main": "appcache-nanny.js",
   "scripts": {
+    "pretest": "standard",
     "test": "frontend-test-background mocha test/*.js",
     "start": "node ./bin/dev-server.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
@@ -30,7 +31,13 @@
     "hapi": "^8.6.1",
     "mocha": "^2.5.2",
     "moment": "^2.10.3",
-    "semantic-release": "^6.3.0"
+    "semantic-release": "^6.3.0",
+    "standard": "^7.1.2"
+  },
+  "standard": {
+    "ignore": [
+      "bower_components"
+    ]
   },
   "frontend-test-setup": {
     "server": {
