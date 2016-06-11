@@ -45,7 +45,7 @@ describe('hoodie.account', function () {
         }).then(toValue)
       }, 10 * 1000, 1000)
       .getText('#logs')
-        .should.eventually.match(/cached/)
+        .should.eventually.match(/progress \(\d+\/\d+\)/)
 
       // non-existing paths should no load due to the appCache FALLBACK: / /
       .url('/appcache-fallback-test')
