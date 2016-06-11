@@ -3,7 +3,7 @@
   "description": "Teaches the applicationCache douchebag some manners!",
   "main": "appcache-nanny.js",
   "scripts": {
-    "test": "node ./bin/test-browser.js",
+    "test": "frontend-test-background mocha test/*.js",
     "start": "node ./bin/dev-server.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
@@ -23,16 +23,20 @@
   },
   "homepage": "https://github.com/gr2m/appcache-nanny",
   "devDependencies": {
-    "chai": "^3.0.0",
+    "@gr2m/frontend-test-setup": "^1.2.1",
+    "chai": "^3.5.0",
     "chai-as-promised": "^5.1.0",
     "colors": "^1.1.2",
     "hapi": "^8.6.1",
-    "mocha": "^2.2.5",
+    "mocha": "^2.5.2",
     "moment": "^2.10.3",
-    "sauce-connect-launcher": "^0.14.0",
-    "selenium-standalone": "^5.1.1",
-    "semantic-release": "^6.3.0",
-    "wd": "^0.4.0"
+    "semantic-release": "^6.3.0"
   },
-  "dependencies": {}
+  "frontend-test-setup": {
+    "server": {
+      "cmd": "node ./bin/dev-server.js",
+      "host": "127.0.0.1",
+      "port": 8888
+    }
+  }
 }
