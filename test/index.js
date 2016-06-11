@@ -1,58 +1,73 @@
-/* global describe, it, after */
-module.exports = function(browser, options, callback) {
-  var error = null;
+/* global describe, beforeEach, it */
 
-  function setError(err) {
-    error = err;
+require('@gr2m/frontend-test-setup')
+
+function toValue (result) {
+  if (isError(result.value)) {
+    var error = new Error(result.value.message)
+    Object.keys(result.value).forEach(function (key) {
+      error[key] = result.value[key]
+    })
+    throw error
   }
 
-  browser
-    .execute('return navigator.userAgent')
+  return result.value
+}
 
-    // version is loaded from server set with JavaScript asynchronously
-    .elementByCss('#version').text()
-      .should.become('1')
-    // cache button should be visible, as app is not cached initially
-    .elementByCss('#btn-cache').isDisplayed()
-      .should.become(true)
-    // when clicked on cache button, "cached" event should eventually appear
-    .elementByCss('#btn-cache').click()
+function isError (value) {
+  return value && value.name && /error/i.test(value.name)
+}
 
-    .waitForConditionInBrowser('((document.querySelector("#logs") && document.querySelector("#logs").textContent) || "").indexOf("cached") >= 0', 10 * 1000, 1000)
-    .elementByCss('#logs').text()
-      .should.eventually.match(/cached/)
+describe('hoodie.account', function () {
+  this.timeout(30000)
 
-    // non-existing paths should no load due to the appCache FALLBACK: / /
-    .get(options.baseUrl + '/appcache-fallback-test')
+  beforeEach(function () {
+    return this.client.url('/')
+  })
 
-    .elementByCss('#version').text()
-      .should.become('1')
+  it('should be funky', function () {
+    return this.client
 
-    // Is cached? should become "yes"
-    .waitForConditionInBrowser('document.body.dataset.iscached === "1"', 10 * 1000)
+      // version is loaded from server set with JavaScript asynchronously
+      .getText('#version')
+        .should.eventually.equal('1')
+      // cache button should be visible, as app is not cached initially
+      .isVisible('#btn-cache')
+        .should.eventually.equal(true)
+      // when clicked on cache button, "cached" event should eventually appear
+      .click('#btn-cache')
 
-    // check for update
-    .elementByCss('#btn-check').click()
+      .waitUntil(function () {
+        return this.execute(function () {
+          var $logs = document.querySelector('#logs')
+          if (!$logs) return
+          return ($logs.textContent || '').indexOf('cached') >= 0
+        }).then(toValue)
+      }, 10 * 1000, 1000)
+      .getText('#logs')
+        .should.eventually.match(/cached/)
 
-    // wait until first "noupdate" is visible
-    .waitForConditionInBrowser('document.querySelector("#logs").textContent.search(/noupdate/) >= 0', 10 * 1000)
+      // non-existing paths should no load due to the appCache FALLBACK: / /
+      .url('/appcache-fallback-test')
 
-    // catch error now as we need to ignore error by next command
-    .catch(setError)
-    .waitForConditionInBrowser('document.querySelectorAll("#logs").length === 2', 3 * 1000)
-    .then(function() {
-      // https://github.com/gr2m/appcache-nanny/issues/7
-      // Note: despite having the exact same setup on saucelabs as locally,
-      //       I was not able to reproduce the bug. Leaving this test for reference
-      throw new Error('"noupdate" event should only be triggered once');
-    }, function () {
-      // expected error, ignore
-    })
+      .getText('#version')
+        .should.become('1')
 
-    .catch(setError)
-    .fin(function() {
-      // callback(error);
-      return browser.quit().then(callback.bind(null, error));
-    })
-    .done();
-};
+      // Is cached? should become "yes"
+      .waitUntil(function () {
+        return this.execute(function () {
+          return document.body.dataset.iscached === '1'
+        }).then(toValue)
+      }, 10 * 1000)
+
+      // check for update
+      .click('#btn-check')
+
+      // wait until first "noupdate" is visible
+      .waitUntil(function () {
+        return this.execute(function () {
+          return document.querySelector('#logs').textContent.search(/noupdate/) >= 0
+        }).then(toValue)
+      }, 10 * 1000)
+  })
+})
