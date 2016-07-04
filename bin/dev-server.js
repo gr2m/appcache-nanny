@@ -7,6 +7,7 @@ var path = require('path')
 var util = require('util')
 
 var Hapi = require('hapi')
+var Inert = require('inert')
 
 var moment = require('moment')
 var PORT = 8888
@@ -22,6 +23,8 @@ server.connection({
   host: HOSTNAME,
   port: PORT
 })
+
+server.register(Inert, function () {})
 
 // Serve dynamic js file to set version / timestamp
 server.route({
