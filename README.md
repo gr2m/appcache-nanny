@@ -3,7 +3,9 @@ The appCache Nanny
 
 > Teaches the applicationCache douchebag some manners!
 
-[![Build Status](https://travis-ci.org/gr2m/appcache-nanny.svg)](https://travis-ci.org/gr2m/appcache-nanny)
+[![Build Status](https://travis-ci.org/gr2m/appcache-nanny.svg?branch=master)](https://travis-ci.org/gr2m/appcache-nanny)
+[![Dependency Status](https://david-dm.org/gr2m/appcache-nanny.svg)](https://david-dm.org/gr2m/appcache-nanny)
+[![devDependency Status](https://david-dm.org/gr2m/appcache-nanny/dev-status.svg)](https://david-dm.org/gr2m/appcache-nanny#info=devDependencies)
 
 As we all know, the [Application Cache is a Douchebag](http://alistapart.com/article/application-cache-is-a-douchebag).
 It's time to teach it some manners – The appCache Nanny for Rescue!
