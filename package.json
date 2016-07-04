@@ -29,6 +29,7 @@
     "chai-as-promised": "^5.1.0",
     "colors": "^1.1.2",
     "hapi": "^13.4.2",
+    "inert": "^4.0.0",
     "mocha": "^2.5.2",
     "moment": "^2.10.3",
     "semantic-release": "^6.3.0",
