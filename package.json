@@ -33,7 +33,7 @@
     "mocha": "^3.0.0",
     "moment": "^2.14.1",
     "semantic-release": "^6.3.0",
-    "standard": "^7.1.2"
+    "standard": "^8.0.0"
   },
   "standard": {
     "ignore": [

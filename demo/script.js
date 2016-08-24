@@ -92,7 +92,7 @@ function request (options) {
   req.send()
 }
 
-/*eslint-disable no-unused-vars*/
+/* eslint-disable no-unused-vars */
 function clearLogs () {
   document.querySelector('#logs').innerHTML = ''
   document.body.setAttribute('data-haslogs', '0')
