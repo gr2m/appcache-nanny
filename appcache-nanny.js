@@ -11,7 +11,7 @@
 ;(function (root, factory) {
   var appCache = (typeof applicationCache === 'undefined') ? undefined : applicationCache
 
-  // based on https://github.com/allouis/minivents/blob/master/minivents.js
+  // based on https://github.com/allouis/minivents/blob/main/minivents.js
   function Events () {
     var events = {}
     var api = this
