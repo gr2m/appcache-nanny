@@ -3,7 +3,7 @@ The appCache Nanny
 
 > Teaches the applicationCache douchebag some manners!
 
-[![Build Status](https://travis-ci.org/gr2m/appcache-nanny.svg?branch=master)](https://travis-ci.org/gr2m/appcache-nanny)
+[![Build Status](https://travis-ci.org/gr2m/appcache-nanny.svg?branch=main)](https://travis-ci.org/gr2m/appcache-nanny)
 [![Dependency Status](https://david-dm.org/gr2m/appcache-nanny.svg)](https://david-dm.org/gr2m/appcache-nanny)
 [![devDependency Status](https://david-dm.org/gr2m/appcache-nanny/dev-status.svg)](https://david-dm.org/gr2m/appcache-nanny#info=devDependencies)
 
@@ -93,7 +93,7 @@ or a prompt asking the user to reload the page. And it works very well so far.
 Demo
 ----
 
-![appCacheNanny demo screencast](https://raw.github.com/gr2m/appcache-nanny/master/demo/demo.gif)
+![appCacheNanny demo screencast](https://raw.github.com/gr2m/appcache-nanny/main/demo/demo.gif)
 
 The appCache Nanny comes with a simple server for testing. Start it using Node:
 
