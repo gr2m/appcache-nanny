@@ -8,10 +8,7 @@
     "start": "node ./bin/dev-server.js",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gr2m/appcache-nanny.git"
-  },
+  "repository": "github:gr2m/appcache-nanny",
   "keywords": [
     "browser",
     "appcache",
@@ -19,10 +16,6 @@
   ],
   "author": "Gregor Martynus <gregor@martynus.net>",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/gr2m/appcache-nanny/issues"
-  },
-  "homepage": "https://github.com/gr2m/appcache-nanny",
   "devDependencies": {
     "@gr2m/frontend-test-setup": "^1.2.1",
     "chai": "^3.5.0",
