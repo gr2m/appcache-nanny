@@ -23,7 +23,7 @@
     "colors": "^1.1.2",
     "hapi": "^15.0.1",
     "inert": "^4.0.0",
-    "mocha": "^3.0.0",
+    "mocha": "^3.1.0",
     "moment": "^2.14.1",
     "semantic-release": "^6.3.0",
     "standard": "^8.0.0"
